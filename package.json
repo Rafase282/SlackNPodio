@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/flyblackbox/SeanLouisPodio#readme",
   "dependencies": {
-    "@slack/client": "^3.8.1"
+    "@slack/client": "^3.8.1",
+    "podio-js": "^1.6.0"
   }
 }
