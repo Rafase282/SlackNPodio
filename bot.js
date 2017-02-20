@@ -10,6 +10,8 @@ var rtm = new RtmClient(bot_token);
 
 var channelId;
 
+var podio = require('./podio-js');
+
 // The client will emit an RTM.AUTHENTICATED event on successful connection, with the `rtm.start` payload if you want to cache it
 rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function (rtmStartData) {
     var channels = rtmStartData.channels;
@@ -41,3 +43,59 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 
 
 rtm.start();
+
+
+
+
+
+
+
+    //Setup the API client
+
+    var podio = new Podio({
+        authType: 'client',
+        clientId: clientId,
+        clientSecret: clientSecret
+      });
+
+
+    //Authenticate
+    const Podio = require('./podio-js').api;
+
+    // Example config file where you might store your credentials
+    import Keys from '../keys.js'
+
+    // get the API id/secret
+    const clientId = Keys.clientId;
+    const clientSecret = Keys.clientSecret;
+
+    // get the app ID and Token for appAuthentication
+    const appId = Keys.appId;
+    const appToken = Keys.appToken;
+
+    // instantiate the SDK
+    const podio = new Podio({
+      authType: 'app',
+      clientId: clientId,
+      clientSecret: clientSecret
+    });
+
+    podio.authenticateWithApp(appId, appToken, (err) => {
+
+      if (err) throw new Error(err);
+
+      podio.isAuthenticated().then(() => {
+        // Ready to make API calls in here...
+
+      }).catch(err => console.log(err));
+
+    });
+
+
+
+    //Make your API calls
+
+    podio.request('GET', '/tasks', null, function(responseData) {
+      // do something with the data
+      console.log(responseData);
+    });
