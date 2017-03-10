@@ -4,20 +4,22 @@ var RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 
 var Podio = require('podio-js').api;
 
-var Keys = require('./keys');
+require('dotenv').config({
+  silent: true
+});
 
-var bot_token = Keys.botToken;
+var bot_token = process.env.botToken;
 var rtm = new RtmClient(bot_token);
 var podio;
 var podioAuthenticated = false;
 
 // get the API id/secret
-var clientId = Keys.clientId;
-var clientSecret = Keys.clientSecret;
+var clientId = process.env.clientId;
+var clientSecret = process.env.clientSecret;
 
 // get the app ID and Token for appAuthentication
-var appId = Keys.appID;
-var appToken = Keys.appToken;
+var appId = process.env.appID;
+var appToken = process.env.appToken;
 
 // The client will emit an RTM.AUTHENTICATED event on successful connection, with the `rtm.start` payload if you want to cache it
 rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function (rtmStartData) {
