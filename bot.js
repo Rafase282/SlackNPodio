@@ -23,12 +23,27 @@ rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function(rtmStartData) {
   });
 });
 
-function getTitle() {
-  let externalId = 'title';
+// Adds function to capitalize first letter and lowecase the rest tot he string object.
+String.prototype.titleCase = function() {
+  return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
+}
+
+function getTitle(title) {
   return podio.request('GET', '/app/' + process.env.appID).then(function(responseData) {
     console.log(responseData);
     return responseData.status;
   })
+}
+
+/* Get status and sends it as a message
+ * Needs an item id for the api
+ * A message to send to the user
+ * Channel id to send the message to.
+ */
+function getStatus(itemId, msg, channel) {
+  return podio.request('GET', '/app/' + process.env.appID).then(function(responseData) {
+    rtm.sendMessage(msg + responseData.status.titleCase(), channel);
+  });
 }
 
 // // you need to wait for the client to fully connect before you can send messages
@@ -37,21 +52,27 @@ rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, function() {
 });
 
 rtm.on(RTM_EVENTS.MESSAGE, function(message) {
-  // TODO : look for /podio command somehow
-  // Looks for "podio status"
-  let channelId = message.channel;
-  let split = message.text.split(' ');
-  if (split[1] === 'status') {
-    if (podioAuthenticated) {
-      getTitle().then(function(status) {
-        // Call Podio API
-        rtm.sendMessage('Title status: ' + status, channelId);
-      }).catch(function(err) {
-        console.log(err);
-      });
-    } else {
-      console.log('podio is not authenticated');
+  // Looks for "@podio title get status"
+  let msg = message.text.split(' ');
+  const channel = message.channel;
+  if (podioAuthenticated && msg[0] === '@podio') {
+    switch (true) {
+      case msg[2] === 'get' && msg[3] == 'status':
+        getStatus(msg[1], msg[1].titleCase() + ' status: ', channel);
+        /*getTitle(msg[1]).then(function(status) {
+          rtm.sendMessage('Title status: ' + status, channelId);
+        }).catch(function(err) {
+          console.log(err);
+        });*/
+        break;
+      case msg[2] === 'set' && msg[3] === 'status':
+        //setStatus(msg[4], res, id);
+        break;
+      default:
+        rtm.sendMessage('Sorry, wrong command', channel);
     }
+  } else {
+    console.log('podio is not authenticated or message was not for it.');
   }
 });
 
