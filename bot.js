@@ -33,15 +33,16 @@ rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function (rtmStartData) {
 
 function getTitle() {
     var externalId = 'title';
-    return podio.request('GET', '/app/' + appId + '/field/' + externalId).then(function(responseData) {
+    return podio.request('GET', '/app/' + appId).then(function(responseData) {
+      console.log(responseData);
         return responseData.status;
     })
 }
 
 // // you need to wait for the client to fully connect before you can send messages
-// rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, function () {
-//     rtm.sendMessage("Hello!", channelId);
-// });
+ rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, function () {
+     rtm.sendMessage("Hello! Just letting you know that I'm here if you need anything.", 'C46S9UAN5');
+ });
 
 rtm.on(RTM_EVENTS.MESSAGE, function (message) {
     // TODO : look for /podio command somehow

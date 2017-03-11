@@ -1,24 +1,24 @@
 {
-  "name": "sean-louis-podio",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/flyblackbox/SeanLouisPodio.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/flyblackbox/SeanLouisPodio/issues"
-  },
-  "homepage": "https://github.com/flyblackbox/SeanLouisPodio#readme",
-  "dependencies": {
-    "@slack/client": "^3.8.1",
-    "dotenv": "^4.0.0",
-    "podio-js": "^1.6.0"
-  }
+	"name": "slacknpodio",
+	"version": "1.0.0",
+	"description": "",
+	"main": "bot.js",
+	"scripts": {
+		"start": "node bot.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flyblackbox/SlackNPodio.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/flyblackbox/SlackNPodio/issues"
+	},
+	"homepage": "https://github.com/flyblackbox/SlackNPodio#readme",
+	"dependencies": {
+		"@slack/client": "^3.8.1",
+		"podio-js": "^1.5.0",
+		"dotenv": "^4.0.0"
+	}
 }
