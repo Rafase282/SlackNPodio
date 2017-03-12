@@ -1,3 +1,5 @@
+"use strict";
+
 const RtmClient = require('@slack/client').RtmClient;
 const CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 const RTM_EVENTS = require('@slack/client').RTM_EVENTS;
@@ -13,7 +15,7 @@ const podio = new Podio({
   clientSecret: process.env.clientSecret
 });
 
-// Adds function to capitalize first letter and lowecase the rest tot he string object.
+// Adds function to capitalize first letter and lowecase the rest to the string object.
 String.prototype.titleCase = function() {
   return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
 }
@@ -24,7 +26,16 @@ String.prototype.titleCase = function() {
  * Channel id to send the message to.
  */
 function getStatus(itemId, msg, channel) {
-  return podio.request('GET', '/app/' + process.env.appID).then(function(responseData) {
+  return podio.request('GET', '/item/' +itemId+'?mark_as_viewed=true' ).then(function(responseData) {
+    console.log(responseData.app);
+    rtm.sendMessage(msg + responseData.app.status.titleCase(), channel);
+  });
+}
+
+//Sets status field to value Active or Inactive
+//Action: @podio set status [value: Active or Inactive]
+function setStatus(itemId, msg, channel) {
+  return podio.request('POST', '/app/' + process.env.appID).then(function(responseData) {
     rtm.sendMessage(msg + responseData.status.titleCase(), channel);
   });
 }
