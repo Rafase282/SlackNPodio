@@ -27,8 +27,8 @@ String.prototype.titleCase = function() {
  */
 function getStatus(itemId, msg, channel) {
   return podio.request('GET', '/item/' +itemId+'?mark_as_viewed=true' ).then(function(responseData) {
-    console.log(responseData.app);
-    rtm.sendMessage(msg + responseData.app.status.titleCase(), channel);
+    let obj = responseData.fields.filter((field) => (field.label === 'Status'));
+    rtm.sendMessage(responseData.title +': '+ obj[0].values[0].value.text, channel);
   });
 }
 
