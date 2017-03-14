@@ -36,8 +36,14 @@ function filterItems(title, field) {
 
 function getItemID(item, field) {
   return filterItems(item, field)
-    .then((res) => res[0].item_id);
+    .then((item) => item[0].item_id);
+}
 
+function getFieldID(item, field) {
+  return filterItems(item, field)
+    .then((items) => {
+      return filterFields(items[0].fields, field)[0].values[0].value.id;
+    });
 }
 // function to get values
 function getStatus(item, field, channel) {
@@ -53,11 +59,13 @@ function getStatus(item, field, channel) {
 function setStatus(item, field, value, channel) {
   return getItemID(item, field)
     .then((item_id) => {
-      return podio.request('PUT', `/item/${item_id}/value/${field}`).then((res) => {
-        rtm.sendMessage('Item: ' + item + ', Field: ' + field + ', Value(s): ' + res, channel);
-      });
+      return getFieldID(item, field)
+        .then((fieldID) => {
+          return podio.request('PUT', `/item/${item_id}/value/${fieldID}`).then((res) => {
+            rtm.sendMessage('Item: ' + item + ', Field: ' + field + ', Value(s): ' + res, channel);
+          });
+        })
     });
-
 }
 
 function authenticatePodio(callback, errorCallback) {
@@ -102,7 +110,6 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
         });
         break;
       case action === 'set':
-        getItemID(item,field);
         setStatus(item, field, value, channel).catch((err) => {
           console.log(err);
         });
