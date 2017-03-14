@@ -57,15 +57,18 @@ function getStatus(item, field, channel) {
 //Sets status field to value Active or Inactive
 //Action: @podio set status [value: Active or Inactive]
 function setStatus(item, field, value, channel) {
-  return getItemID(item, field)
-    .then((item_id) => {
-      return getFieldID(item, field)
-        .then((fieldID) => {
-          return podio.request('PUT', `/item/${item_id}/value/${fieldID}`).then((res) => {
-            rtm.sendMessage('Item: ' + item + ', Field: ' + field + ', Value(s): ' + res, channel);
-          });
-        })
-    });
+  const data = {
+    fields: [{
+      [field]: value
+    }]
+  };
+  return getItemID(item, field).then((item_id) => {
+    return getFieldID(item, field).then((fieldID) => {
+      return podio.request('PUT', `/item/${item_id}/value/${fieldID}`, data).then((res) => {
+        rtm.sendMessage('Item: ' + item + ', Field: ' + field + ', Value(s): ' + res, channel);
+      });
+    })
+  });
 }
 
 function authenticatePodio(callback, errorCallback) {
