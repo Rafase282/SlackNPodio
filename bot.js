@@ -1,12 +1,10 @@
-"use strict";
+'use strict';
 
 const RtmClient = require('@slack/client').RtmClient;
 const CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 const RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 const Podio = require('podio-js').api;
-require('dotenv').config({
-  silent: true
-});
+require('dotenv').config({silent: true});
 let podioAuthenticated = false;
 const rtm = new RtmClient(process.env.botToken);
 const podio = new Podio({
@@ -20,16 +18,36 @@ String.prototype.titleCase = function() {
   return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
 }
 
-/* Get status and sends it as a message
- * Needs an item id for the api
- * A message to send to the user
- * Channel id to send the message to.
- */
-function getStatus(itemId, msg, channel) {
-  return podio.request('GET', '/item/' +itemId+'?mark_as_viewed=true' ).then(function(responseData) {
-    let obj = responseData.fields.filter((field) => (field.label === 'Status'));
-    rtm.sendMessage(responseData.title +': '+ obj[0].values[0].value.text, channel);
-  });
+// Function to filter array of fields
+function filterFields(fields, key) {
+  return fields.filter((field) => field.label === key)
+}
+
+// Function with the podio api call to get all items and filter by excat title
+function filterItems(title, field) {
+  const data = {
+    'sort_by': 'title',
+    'sort_desc': true,
+    'filters': {
+      title: title
+    },
+    'limit': 30,
+    'offset': 0,
+    'remember': false
+  }
+  return podio.request('POST', '/item/app/17912486/filter/', data)
+    .then(function(responseData) {
+      return responseData.items[0].fields;
+    });
+}
+
+// function to get values
+function getStatus(item, field, channel) {
+  return filterItems(item, field)
+    .then(function(fields) {
+      let res = filterFields(fields, field)[0].values[0].value.text;
+      rtm.sendMessage('Item: ' + item + ', Field: ' + field + ', Value(s): ' + res, channel);
+    });
 }
 
 //Sets status field to value Active or Inactive
@@ -62,24 +80,24 @@ rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function(rtmStartData) {
 
 // // you need to wait for the client to fully connect before you can send messages
 rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, function() {
-  rtm.sendMessage("Hello! Just letting you know that I'm here if you need anything.", 'C46S9UAN5');
+  rtm.sendMessage('Hello! Just letting you know that I\'m here if you need anything.', 'C46S9UAN5');
 });
 
 rtm.on(RTM_EVENTS.MESSAGE, function(message) {
-  // Looks for "@podio title get status"
+  // Looks for '@podio title get status'
   const msg = message.text.split(' ');
   const channel = message.channel;
 
   if (podioAuthenticated && msg[0] === '@podio') {
     switch (true) {
-      case msg[2] === 'get' && msg[3] == 'status':
-        let reply = msg[1].titleCase() + ' status: ';
-        getStatus(msg[1], reply, channel)
-          .catch(function(err) {
-            console.log(err);
-          });;
+      case msg[2] === 'get':
+        let item = msg[1];
+        let field = msg[3];
+        getStatus(item, field, channel).catch(function(err) {
+          console.log(err);
+        });
         break;
-      case msg[2] === 'set' && msg[3] === 'status':
+      case msg[2] === 'set':
         //setStatus(msg[4], res, id);
         break;
       default:
