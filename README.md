@@ -19,6 +19,8 @@ Example for sending information: `@podio Another set Category R282`
 3. Fill out the `.env` file with the right credentials.
 4. Run with `node bot.js` or `npm start`
 
+Optionally, you can llint with `npm run lint`
+
 ### .env file
 
 The following is what is needed in the `.env` file to have things working out properly.

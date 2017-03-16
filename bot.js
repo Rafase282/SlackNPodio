@@ -1,3 +1,4 @@
+/*eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
 'use strict';
 
 const RtmClient = require('@slack/client').RtmClient;
@@ -68,6 +69,7 @@ function setStatus(item_name, field_name, field_value, channel) {
 
 function authenticatePodio(callback, errorCallback) {
   return podio.authenticateWithApp(process.env.appID, process.env.appToken, (err) => {
+    errorCallback(err);
     return podio.isAuthenticated().then(() => {
       callback();
     }).catch((err) => {
