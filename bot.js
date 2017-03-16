@@ -31,8 +31,7 @@ function filterItems(item_name) {
     'remember': false
   }
   // Returns Filtered Item Object
-  return podio.request('POST', '/item/app/17912486/filter/', data)
-    .then((res) => res.items);
+  return podio.request('POST', '/item/app/17912486/filter/', data).then((res) => res.items);
 }
 
 function getItemID(items_arr) {
@@ -40,34 +39,30 @@ function getItemID(items_arr) {
 }
 
 function getFieldID(items_arr, field_name) {
-  return filterFields(items_arr[0].fields, field_name)[0].values[0].value.id;
+  return filterFields(items_arr[0].fields, field_name)[0].field_id;
 }
 
 // function to get values
 function getStatus(item_name, field_name, channel) {
-  return filterItems(item_name)
-    .then((items) => {
-      const res = filterFields(items[0].fields, field_name)[0].values[0].value.text;
-      rtm.sendMessage('Item: ' + item_name + ', Field: ' + field_name + ', Value(s): ' + res, channel);
-    });
+  return filterItems(item_name).then((items) => {
+    const res = filterFields(items[0].fields, field_name)[0].values[0].value.text;
+    rtm.sendMessage('Item: ' + item_name + ', Field: ' + field_name + ', Value(s): ' + res, channel);
+  });
 }
 
 // Sets status field to value Active or Inactive
 //Action: @podio set status [value: Active or Inactive]
 function setStatus(item_name, field_name, field_value, channel) {
   const data = {
-    fields: [
-      {
-        [field_name]: field_value
-      }
-    ]
+    "values": field_value
   };
   return filterItems(item_name).then((item) => {
     const item_id = getItemID(item);
     const fieldID = getFieldID(item, field_name);
-        return podio.request('PUT', `/item/${item_id}/value/${fieldID}`, data).then((res) => {
-          rtm.sendMessage('Item: ' + item_name + ', Field: ' + field_name + ', Value(s): ' + res, channel);
-        });
+    console.log(item[0].fields[0]);
+    return podio.request('PUT', `/item/${item_id}/value/${fieldID}`, data).then((res) => {
+      rtm.sendMessage('Item: ' + item_name + ', Field: ' + field_name + ', Value(s): ' + res, channel);
+    });
   });
 }
 
