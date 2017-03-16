@@ -19,55 +19,55 @@ function filterFields(fields, key) {
 }
 
 // Function with the podio api call to get all items and filter by excat title
-function filterItems(title, field) {
+function filterItems(item_name) {
   const data = {
     'sort_by': 'title',
     'sort_desc': true,
     'filters': {
-      title: title
+      title: item_name
     },
     'limit': 30,
     'offset': 0,
     'remember': false
   }
+  // Returns Filtered Item Object
   return podio.request('POST', '/item/app/17912486/filter/', data)
     .then((res) => res.items);
 }
 
-function getItemID(item, field) {
-  return filterItems(item, field)
-    .then((item) => item[0].item_id);
+function getItemID(items_arr) {
+  return items_arr[0].item_id;
 }
 
-function getFieldID(item, field) {
-  return filterItems(item, field)
-    .then((items) => {
-      return filterFields(items[0].fields, field)[0].values[0].value.id;
-    });
+function getFieldID(items_arr, field_name) {
+  return filterFields(items_arr[0].fields, field_name)[0].values[0].value.id;
 }
+
 // function to get values
-function getStatus(item, field, channel) {
-  return filterItems(item, field)
+function getStatus(item_name, field_name, channel) {
+  return filterItems(item_name)
     .then((items) => {
-      const res = filterFields(items[0].fields, field)[0].values[0].value.text;
-      rtm.sendMessage('Item: ' + item + ', Field: ' + field + ', Value(s): ' + res, channel);
+      const res = filterFields(items[0].fields, field_name)[0].values[0].value.text;
+      rtm.sendMessage('Item: ' + item_name + ', Field: ' + field_name + ', Value(s): ' + res, channel);
     });
 }
 
-//Sets status field to value Active or Inactive
+// Sets status field to value Active or Inactive
 //Action: @podio set status [value: Active or Inactive]
-function setStatus(item, field, value, channel) {
+function setStatus(item_name, field_name, field_value, channel) {
   const data = {
-    fields: [{
-      [field]: value
-    }]
+    fields: [
+      {
+        [field_name]: field_value
+      }
+    ]
   };
-  return getItemID(item, field).then((item_id) => {
-    return getFieldID(item, field).then((fieldID) => {
-      return podio.request('PUT', `/item/${item_id}/value/${fieldID}`, data).then((res) => {
-        rtm.sendMessage('Item: ' + item + ', Field: ' + field + ', Value(s): ' + res, channel);
-      });
-    })
+  return filterItems(item_name).then((item) => {
+    const item_id = getItemID(item);
+    const fieldID = getFieldID(item, field_name);
+        return podio.request('PUT', `/item/${item_id}/value/${fieldID}`, data).then((res) => {
+          rtm.sendMessage('Item: ' + item_name + ', Field: ' + field_name + ', Value(s): ' + res, channel);
+        });
   });
 }
 
