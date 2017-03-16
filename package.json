@@ -1,16 +1,22 @@
 {
 	"name": "slacknpodio",
 	"version": "1.0.0",
-	"description": "",
+	"description": "Creates `@podio` command capable of retrieving and updating information to/from podio via slack.",
 	"main": "bot.js",
 	"scripts": {
 		"start": "node bot.js"
 	},
+  "keywords": [
+    "Podio",
+    "Slack",
+    "Rafase282",
+		"Podio-JS"
+  ],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flyblackbox/SlackNPodio.git"
 	},
-	"author": "",
+	"author": "Rafael Rodriguez",
 	"license": "ISC",
 	"bugs": {
 		"url": "https://github.com/flyblackbox/SlackNPodio/issues"
