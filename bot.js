@@ -14,9 +14,9 @@ const podio = new Podio({
   clientSecret: process.env.clientSecret
 });
 
-// Function to filter array of fields
+// Function to filter array of fields by label or text
 function filterFields(fields, key) {
-  return fields.filter((field) => field.label === key)
+  return fields.filter((field) => field.label === key || field.text === key)
 }
 
 // Function with the podio api call to get all items and filter by excat title
@@ -35,17 +35,25 @@ function filterItems(item_name) {
   return podio.request('POST', '/item/app/17912486/filter/', data).then((res) => res.items);
 }
 
+// Gets item's ID
 function getItemID(items_arr) {
   return items_arr[0].item_id;
 }
 
+// Gets field id
 function getFieldID(items_arr, field_name) {
   return filterFields(items_arr[0].fields, field_name)[0].field_id;
+}
+
+// Gets field's value id
+function getFieldValueID(options_arr, field_value) {
+  return filterFields(options_arr, field_value)[0].id;
 }
 
 // function to get values
 function getStatus(item_name, field_name, channel) {
   return filterItems(item_name).then((items) => {
+    console.log(filterFields(items[0].fields, field_name)[0])
     const res = filterFields(items[0].fields, field_name)[0].values[0].value.text;
     rtm.sendMessage('Item: ' + item_name + ', Field: ' + field_name + ', Value(s): ' + res, channel);
   });
@@ -54,15 +62,16 @@ function getStatus(item_name, field_name, channel) {
 // Sets status field to value Active or Inactive
 //Action: @podio set status [value: Active or Inactive]
 function setStatus(item_name, field_name, field_value, channel) {
-  const data = {
-    "values": field_value
-  };
   return filterItems(item_name).then((item) => {
+    const options = item[0].fields[1].config.settings.options;
     const item_id = getItemID(item);
-    const fieldID = getFieldID(item, field_name);
-    console.log(item[0].fields[0]);
-    return podio.request('PUT', `/item/${item_id}/value/${fieldID}`, data).then((res) => {
-      rtm.sendMessage('Item: ' + item_name + ', Field: ' + field_name + ', Value(s): ' + res, channel);
+    const fieldID = getFieldValueID(options, field_value);
+    const data = {
+      "category": [fieldID]
+    };
+    //console.log(item_name, field_name, field_value,'\n',item[0].fields[1].config.settings.options);
+    return podio.request('PUT', `/item/${item_id}/value/`, data).then((res) => {
+      rtm.sendMessage('Item: ' + item_name + ', Field: ' + field_name + ', Value set to: ' + field_value, channel);
     });
   });
 }
