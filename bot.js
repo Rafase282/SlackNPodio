@@ -65,11 +65,13 @@ function setStatus(item_name, field_name, field_value, channel) {
   return filterItems(item_name).then((item) => {
     const options = item[0].fields[1].config.settings.options;
     const item_id = getItemID(item);
-    const fieldID = getFieldValueID(options, field_value);
-    const data = {
-      "category": [fieldID]
-    };
-    //console.log(item_name, field_name, field_value,'\n',item[0].fields[1].config.settings.options);
+    let fieldID = field_value;
+    let data = {};
+    if (field_name === 'Category' || field_name === 'category') {
+      fieldID = getFieldValueID(options, field_value);
+      data = {'category': [fieldID]};
+    }
+    data[field_name.toLowerCase()] = fieldID;
     return podio.request('PUT', `/item/${item_id}/value/`, data).then((res) => {
       rtm.sendMessage('Item: ' + item_name + ', Field: ' + field_name + ', Value set to: ' + field_value, channel);
     });
