@@ -53,9 +53,9 @@ function getFieldValueID(options_arr, field_value) {
 // function to get values
 function getStatus(item_name, field_name, channel) {
   return filterItems(item_name).then((items) => {
-    console.log(filterFields(items[0].fields, field_name)[0])
-    const res = filterFields(items[0].fields, field_name)[0].values[0].value.text;
-    rtm.sendMessage('Item: ' + item_name + ', Field: ' + field_name + ', Value(s): ' + res, channel);
+    let res = filterFields(items[0].fields, field_name)[0].values[0].value;
+    res = parseInt(res, 10) || res.title;
+    rtm.sendMessage('Item: ' + item_name + ', Field: ' + field_name + ', Value: ' + res, channel);
   });
 }
 
