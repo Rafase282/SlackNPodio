@@ -54,7 +54,8 @@ function getFieldValueID(options_arr, field_value) {
 function getStatus(item_name, field_name, channel) {
   return filterItems(item_name).then((items) => {
     let res = filterFields(items[0].fields, field_name)[0].values[0].value;
-    res = parseInt(res, 10) || res.title;
+    res =  parseInt(res, 10) || res.text || res;
+    console.log(res);
     rtm.sendMessage('Item: ' + item_name + ', Field: ' + field_name + ', Value: ' + res, channel);
   });
 }
@@ -69,7 +70,9 @@ function setStatus(item_name, field_name, field_value, channel) {
     let data = {};
     if (field_name === 'Category' || field_name === 'category') {
       fieldID = getFieldValueID(options, field_value);
-      data = {'category': [fieldID]};
+      data = {
+        'category': [fieldID]
+      };
     }
     data[field_name.toLowerCase()] = fieldID;
     return podio.request('PUT', `/item/${item_id}/value/`, data).then((res) => {
