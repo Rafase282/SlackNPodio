@@ -18,7 +18,7 @@
     "url": "git+https://github.com/Rafase282/SlackNPodio.git"
   },
   "author": "Rafael Rodriguez",
-  "license": "ISC",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/Rafase282/SlackNPodio/issues"
   },
