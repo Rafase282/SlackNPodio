@@ -1,6 +1,7 @@
 # SlackNPodio
 
-Connect Slack to Podio API. Creates `@podio` command capable of retrieving and updating information to/from podio via slack.
+Connects Slack to Podio API.  
+Creates `@podio` command capable of retrieving and updating information to/from podio via slack.
 
 Add custom bot to team.<br>
 Real Time Messaging API with websocket connection.

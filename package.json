@@ -15,14 +15,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/flyblackbox/SlackNPodio.git"
+    "url": "git+https://github.com/Rafase282/SlackNPodio.git"
   },
   "author": "Rafael Rodriguez",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/flyblackbox/SlackNPodio/issues"
+    "url": "https://github.com/Rafase282/SlackNPodio/issues"
   },
-  "homepage": "https://github.com/flyblackbox/SlackNPodio#readme",
+  "homepage": "https://github.com/Rafase282/SlackNPodio#readme",
   "dependencies": {
     "@slack/client": "^3.8.1",
     "dotenv": "^4.0.0",

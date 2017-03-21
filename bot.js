@@ -6,17 +6,17 @@ const CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 const RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 const Podio = require('podio-js').api;
 require('dotenv').config({silent: true});
-let podioAuthenticated = false;
 const rtm = new RtmClient(process.env.botToken);
 const podio = new Podio({
   authType: 'app', // or client
   clientId: process.env.clientId,
   clientSecret: process.env.clientSecret
 });
+let podioAuthenticated = false;
 
 // Function to filter array of fields by label or text
 function filterFields(fields, key) {
-  return fields.filter((field) => field.label === key || field.text === key)
+  return fields.filter((field) => field.label === key || field.text === key);
 }
 
 // Function with the podio api call to get all items and filter by excat title
@@ -32,7 +32,8 @@ function filterItems(item_name) {
     'remember': false
   }
   // Returns Filtered Item Object
-  return podio.request('POST', '/item/app/17912486/filter/', data).then((res) => res.items);
+  return podio.request('POST', '/item/app/17912486/filter/', data)
+    .then((res) => res.items);
 }
 
 // Gets item's ID
@@ -56,12 +57,15 @@ function getStatus(item_name, field_name, channel) {
     let res = filterFields(items[0].fields, field_name)[0].values[0].value;
     //Returns either a number, string, or whole value.
     res =  parseInt(res, 10) || res.text || res;
-    rtm.sendMessage('Item: ' + item_name + ', Field: ' + field_name + ', Value: ' + res, channel);
+    rtm.sendMessage(
+      `Item: ${item_name}, Field: ${field_name}, Value: ${res}`,
+      channel
+    );
   });
 }
 
 // Sets status field to value Active or Inactive
-//Action: @podio set status [value: Active or Inactive]
+//Action: @podio Item's Name set Field's Name Value
 function setStatus(item_name, field_name, field_value, channel) {
   return filterItems(item_name).then((item) => {
     const options = item[0].fields[1].config.settings.options;
@@ -75,26 +79,36 @@ function setStatus(item_name, field_name, field_value, channel) {
       };
     }
     data[field_name.toLowerCase()] = fieldID;
-    return podio.request('PUT', `/item/${item_id}/value/`, data).then((res) => {
-      rtm.sendMessage('Item: ' + item_name + ', Field: ' + field_name + ', Value set to: ' + field_value, channel);
-    });
+    return podio.request('PUT', `/item/${item_id}/value/`, data)
+      .then((res) => {
+        rtm.sendMessage(
+          `Item: ${item_name}, Field: ${field_name},` +
+          ` Value set to: ${field_value}`,
+          channel
+        );
+      });
   });
 }
 
 function authenticatePodio(callback, errorCallback) {
-  return podio.authenticateWithApp(process.env.appID, process.env.appToken, (err) => {
-    errorCallback(err);
-    return podio.isAuthenticated().then(() => {
-      callback();
-    }).catch((err) => {
+  return podio.authenticateWithApp(process.env.appID, process.env.appToken,
+    (err) => {
       errorCallback(err);
+      return podio.isAuthenticated().then(() => {
+        callback();
+      }).catch((err) => {
+        errorCallback(err);
+      });
     });
-  });
 }
 
-// The client will emit an RTM.AUTHENTICATED event on successful connection, with the `rtm.start` payload if you want to cache it
+// The client will emit an RTM.AUTHENTICATED event on successful connection,
+// with the `rtm.start` payload if you want to cache it
 rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
-  console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}, but not yet connected to a channel`);
+  console.log(
+    `Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name},`
+    + `but not yet connected to a channel.`
+  );
   authenticatePodio(() => {
     podioAuthenticated = true;
   }, (err) => {
@@ -102,9 +116,12 @@ rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
   });
 });
 
-// // you need to wait for the client to fully connect before you can send messages
+// you need to wait for the client to fully connect before you can send messages
 rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
-  rtm.sendMessage('Hello! Just letting you know that I\'m here if you need anything.', 'C46S9UAN5');
+  rtm.sendMessage(
+    `Hello! Just letting you know that I'm here if you need anything.`,
+    'C46S9UAN5'
+  );
 });
 
 rtm.on(RTM_EVENTS.MESSAGE, (message) => {
