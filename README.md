@@ -23,7 +23,7 @@ As a Project Stakeholder, I want to retrieve the expected delivery date for my p
 As a Project Manager, I want to direct team members to request project status by asking the bot before coming to me so that I can spend more of my time planning than responding to messages.
 
 ```
-@podiobot [project name] get Status<br>
+@podiobot [project name] get Status
 @podiobot: [project name] Status: [Status value]
 ```
 
@@ -41,7 +41,7 @@ As a QA Manager, I want to update the status of a project to 'Production Ready' 
 As a Digital Marketing Manager, I want to see a list of all currently live campaigns so I can make sure a specific campaign launched on time as expected.
 
 ```
-@podiobot list [field name] [field value]<br>
+@podiobot list [field name] [field value]
 list of [item title] who's [field name] is equal to [field value]
 ```
 
