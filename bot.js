@@ -131,7 +131,7 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
   if (podioAuthenticated && msg[0] === '@podio') {
     const channel = message.channel;
     const item = msg[1];
-    const action = msg[2]
+    const action = msg[2];
     const field = msg[3];
     const value = msg[4];
     switch (true) {

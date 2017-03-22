@@ -1,46 +1,65 @@
 # SlackNPodio
-Allows team members to interact with data from Podio by using commands within a Slack channel.  
-Any team member can easily retrieve information, or make updates without ever opening a browser.  
+
+Allows team members to interact with data from Podio by using commands within a Slack channel.<br>
+Any team member can easily retrieve information, or make updates without ever opening a browser.<br>
 Even team members without a Podio account now have the ability to interact with Podio right from within a Slack channel.
 
-<b>Get Command</b>: Retrieve field values.<br>
-As a Project Stakeholder, I want to retrieve the expected delivery date for my project without logging into Podio so that I can not be frustrated by my lost password or lack of setup account.<br>
-//Command// @podiobot [project name] get Delivery Date <br>
-//Response// @podiobot: [project name] will be delivered by [delivery date value].
+## Usage
 
-As a Project Manager, I want to direct team members to request project status by asking the bot before coming to me so that I can spend more of my time planning than responding to messages.<br>
-//Command// @podiobot [project name] get Status<br>
-//Response// @podiobot: [project name] Status: [Status value]
+```
+command
+response
+```
 
+**Get Command**: Retrieve field values.
 
-<b>Set Command</b>: Update field values.<br>
-As a QA Manager, I want to update the status of a project to ‘Production Ready’ once I hear back from my QA lead so that I don’t have to open a browser, log into Podio, search for the project and make the update.<br>
-//Command// @podiobot [project name] set Status Production Ready<br>
-//Response// @podiobot: [project name] Status: Production Ready
+As a Project Stakeholder, I want to retrieve the expected delivery date for my project without logging into Podio so that I can not be frustrated by my lost password or lack of setup account.
 
+```
+@podiobot [project name] get Delivery Date
+@podiobot: [project name] will be delivered by [delivery date value].
+```
 
-<b>List Command</b>: Provides a list of items which match a specific field value.<br>
-As a Digital Marketing Manager, I want to see a list of all currently live campaigns so I can make sure a specific campaign launched on time as expected.<br>
-//Command// @podiobot list [field name] [field value]<br>
-//Response// list of [item title] who’s [field name] is equal to [field value]
+As a Project Manager, I want to direct team members to request project status by asking the bot before coming to me so that I can spend more of my time planning than responding to messages.
 
+```
+@podiobot [project name] get Status<br>
+@podiobot: [project name] Status: [Status value]
+```
 
-<b>Help Command</b>: Provide information on how to interact with the bot.<br>
-As any User, I want to learn how to use all of the podiobot commands so I can benefit from the conveniences they provide.<br>
-//Command// @podiobot help<br>
-//Response// [List available commands with descriptions]
+**Set Command**: Update field values.
 
-As any User, I want to learn how to utilize these commands so that I can use all the great features within podiobot.<br>
-//Command//@podiobot help [command]<br>
-//Response//@podiobot: The proper syntax for the [command] is: [command syntax]
+As a QA Manager, I want to update the status of a project to 'Production Ready' once I hear back from my QA lead so that I don't have to open a browser, log into Podio, search for the project and make the update.
 
+```
+@podiobot [project name] set Status Production Ready
+@podiobot: [project name] Status: Production Ready
+```
 
------------------------------
-Connects Slack to Podio API.  
-Creates `@podiobot` command capable of retrieving and updating information to/from podio via slack.
-Adds custom bot to team.
-Real Time Messaging API with websocket connection.
-Open websocket with RTM API by sending an authenitcated call to the `rtm.start` API method.
+**List Command**: Provides a list of items which match a specific field value.
+
+As a Digital Marketing Manager, I want to see a list of all currently live campaigns so I can make sure a specific campaign launched on time as expected.
+
+```
+@podiobot list [field name] [field value]<br>
+list of [item title] who's [field name] is equal to [field value]
+```
+
+**Help Command**: Provide information on how to interact with the bot.
+
+As any User, I want to learn how to use all of the podiobot commands so I can benefit from the conveniences they provide.
+
+```
+@podiobot help
+[List available commands with descriptions]
+```
+
+As any User, I want to learn how to utilize these commands so that I can use all the great features within podiobot.
+
+```
+@podiobot help [command]
+@podiobot: The proper syntax for the [command] is: [command syntax]
+```
 
 ## SETUP
 
@@ -64,15 +83,3 @@ clientSecret='key'
 appToken='key'
 appID='key'
 ```
-
-#### API token (bot):
-
-APP ID for PodioApp
-Token for PodioApp
-
-#### PodioBot App credentials
-
-Client ID<br>
-Client Secret<br>
-App ID for PodioApp<br>
-Token for PodioApp
