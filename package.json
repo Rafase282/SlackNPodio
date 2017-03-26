@@ -1,6 +1,6 @@
 {
   "name": "slacknpodio",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Creates `@podio` command capable of retrieving and updating information to/from podio via slack.",
   "main": "bot.js",
   "scripts": {
