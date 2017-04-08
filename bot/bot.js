@@ -5,6 +5,7 @@ const RtmClient = require('@slack/client').RtmClient;
 const CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 const RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 const Podio = require('podio-js').api;
+const bot = require('./helper');
 require('dotenv').config({silent: true});
 const rtm = new RtmClient(process.env.botToken);
 const podio = new Podio({
@@ -12,7 +13,6 @@ const podio = new Podio({
   clientId: process.env.clientId,
   clientSecret: process.env.clientSecret
 });
-const bot = require('./helper');
 let podioAuthenticated = false;
 
 /* Function with the podio api call to get all items and filter by excat title
@@ -21,7 +21,7 @@ let podioAuthenticated = false;
  * However, this API calls required an excat match although it is not case sensitive.
  * I would say it is only good for getting specific things, not really useful for lists.
  */
-const getPodioItem = (name) => {
+const getPodioItem = exports.getPodioItem = (name) => {
   const data = {
     'sort_by': 'title',
     'sort_desc': true,
@@ -40,32 +40,30 @@ const getPodioItem = (name) => {
  * Users must provide the item name. It depends on
  * getPodioItem to find the right item.
  */
-function getURL(item_name, channel) {
-  return getPodioItem(item_name).then((item) => {
-    const msg = bot.getURL(item);
-    rtm.sendMessage(msg, channel);
-  });
-
-}
+const getURL = exports.getURL = (name) => getPodioItem(name).then((item) =>
+  `Item: ${name}, Item Link: ${bot.getURL(item)}`);
 /* Main function for retrieving field values
  * when you know the item's excat title, it depends on
  * getPodioItem to find the right item.
  * TODO: Decouple more. Make a function to handle res,
  * what should be the final response?
  */
-function getStatus(item_name, field_name, channel) {
+const getStatus = exports.getStatus = (item_name, field_name) => {
   return getPodioItem(item_name).then((item) => {
-    let res = bot.filterFields(item.fields, field_name)[0].values[0].value;
+    let res = bot.filterFields(item.fields, field_name).values[0].value;
     //Returns either a number, string, or whole value.
-    res = parseInt(res, 10) || res.text || (typeof res === 'object'? JSON.stringify(res) : res);
-    rtm.sendMessage(`Item: ${item_name}, Field: ${field_name}, Value: ${res}`, channel);
+    res = parseInt(res, 10) || res.text || (typeof res === 'object'
+      ? JSON.stringify(res)
+      : res);
+      return `Item: ${item_name}, Field: ${field_name}, Value: ${res}`;
   });
 }
 
 // Sets status field to value Active or Inactive
 //Action: @podio Item's Name set Field's Name Value
-function setStatus(item_name, field_name, field_value, channel) {
+const setStatus = exports.setStatus = (item_name, field_name, field_value) => {
   return getPodioItem(item_name).then((item) => {
+    // Check why we are getting the second one, this seems hardcoded.
     const options = item.fields[1].config.settings.options;
     const item_id = bot.getItemID(item);
     let fieldID = field_value;
@@ -78,7 +76,7 @@ function setStatus(item_name, field_name, field_value, channel) {
     }
     data[field_name.toLowerCase()] = fieldID;
     return podio.request('PUT', `/item/${item_id}/value/`, data).then((res) => {
-      rtm.sendMessage(`Item: ${item_name}, Field: ${field_name},` + ` Value set to: ${field_value}`, channel);
+      return `Item: ${item_name}, Field: ${field_name}, Value set to: ${field_value}`;
     });
   });
 }
@@ -97,7 +95,8 @@ function authenticatePodio(callback, errorCallback) {
 // The client will emit an RTM.AUTHENTICATED event on successful connection,
 // with the `rtm.start` payload if you want to cache it
 rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
-  console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name},` + `but not yet connected to a channel.`);
+  console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name},` +
+    `but not yet connected to a channel.`);
   authenticatePodio(() => {
     podioAuthenticated = true;
   }, (err) => {
@@ -124,17 +123,17 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
       case action === 'get':
         getStatus(item, field, channel).catch((err) => {
           console.log(err);
-        });
+        }).then((msg) => rtm.sendMessage(msg, channel));
         break;
       case action === 'set':
         setStatus(item, field, value, channel).catch((err) => {
           console.log(err);
-        });
+        }).then((msg) => rtm.sendMessage(msg, channel));
         break;
       case action === 'url':
-        getURL(item, channel).catch((err) => {
+        getURL(item).catch((err) => {
           console.log(err);
-        });
+        }).then((msg) => rtm.sendMessage(msg, channel));
         break;
       case item === 'help':
         rtm.sendMessage(bot.showHelp(), channel);
@@ -143,7 +142,7 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
         rtm.sendMessage('Sorry, wrong command', channel);
     }
   } else {
-    console.log('podio is not authenticated or message was not for it.');
+    console.log('podio is not authenticated or message was not a command.');
   }
 });
 

@@ -2,7 +2,7 @@
 
 // Function to filter array of fields by label or text
 const filterFields = exports.filterFields = (fields, key) => {
-  return fields.filter((field) => field.label === key || field.text === key);
+  return fields.filter((field) => field.label === key || field.text === key)[0];
 }
 // Gets item's ID
 const getItemID = exports.getItemID = (items_arr) => items_arr.item_id;
@@ -20,4 +20,4 @@ const showHelp = exports.showHelp = () => {
   return help;
 }
 // Retrieves URL
-const getURL = exports.getURL = (itemObj) => `Item: ${itemObj.title}, Item Link: ${itemObj.link}`;
+const getURL = exports.getURL = (itemObj) => itemObj.link;
