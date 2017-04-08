@@ -16,11 +16,11 @@ const podio = new Podio({
 let podioAuthenticated = false;
 
  /**
-  * Podio API call to filter items by excat titles.
+  * Podio API call to filter items by exact titles.
   *
   * Note: Also providing a "property" for the filter would allows us to filter
   * by anything other than the title. Something useful for the new get/list.
-  * However, this API calls required an excat match although it is not case sensitive.
+  * However, this API calls required an exact match although it is not case sensitive.
   * I would say it is only good for getting specific things, not really useful for lists.
   * @param {String} name
   * @return {Object}
@@ -50,7 +50,7 @@ const getPodioItem = exports.getPodioItem = (name) => {
 const getURL = exports.getURL = (name) => getPodioItem(name).then((item) =>
   `Item: ${name}, Item Link: ${bot.getURL(item)}`);
 /**
- * Retrieves field's value when you know the item's excat title, it depends on
+ * Retrieves field's value when you know the item's exact title, it depends on
  * getPodioItem to find the right item.
  * Usage: @podio {item} get {name}
  * @param {String} item
@@ -68,7 +68,7 @@ const getValue = exports.getValue = (item, name) => {
   });
 }
 /**
- * Writes a new field's value when you know the item's excat title, it depends on
+ * Writes a new field's value when you know the item's exact title, it depends on
  * getPodioItem to find the right item.
  * Usage: @podio {item} set {name} {value}
  * @param {String} item
