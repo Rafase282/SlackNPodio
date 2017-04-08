@@ -126,3 +126,8 @@ appID='key'
 ## Contact:
 
 [Github](https://github.com/Rafase282) | [FreeCodeCamp](http://www.freecodecamp.com/rafase282) | [CodePen](http://codepen.io/Rafase282/) | [LinkedIn](https://www.linkedin.com/in/rafase282) | [Portfolio](https://rafase282.github.io/) | [E-Mail](mailto:rafase282@gmail.com)
+
+If you like the project, please start it to receive updates and help make it more noticeable.<br>
+#### If you would like to help out with financial support, you are welcome to do so via [paypal](paypal.me/rafase282).
+
+I'm currently looking to get my career started so any amount helps. If you would like to hire me for a position or work on a project then you may also contact me about that.
