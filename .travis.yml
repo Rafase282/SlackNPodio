@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - "7"
+addons:
+    code_climate:
+        repo_token: 1b8590463f718c15c207bf6fdf8c6e8be319496c640c69d258af5d77e1e15262
+before_install:
+  - pip install --user codecov
+after_success:
+  - codecov --file coverage/lcov.info --disable search

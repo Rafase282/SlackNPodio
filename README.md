@@ -1,10 +1,20 @@
+# Author
+
+![@Rafase282](https://avatars0.githubusercontent.com/Rafase282?&s=128)
+
+Created by Rafase282
+
+[Github](https://github.com/Rafase282) | [FreeCodeCamp](http://www.freecodecamp.com/rafase282) | [CodePen](http://codepen.io/Rafase282/) | [LinkedIn](https://www.linkedin.com/in/rafase282) | [Portfolio](https://rafase282.github.io/) | [E-Mail](mailto:rafase282@gmail.com)
+
+[![Gitter](https://badges.gitter.im/Rafase282/SlackNPodio.svg)](https://gitter.im/Rafase282/SlackNPodio?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Code Climate](https://codeclimate.com/github/Rafase282/SlackNPodio/badges/gpa.svg)](https://codeclimate.com/github/Rafase282/SlackNPodio) [![Issue Count](https://codeclimate.com/github/Rafase282/SlackNPodio/badges/issue_count.svg)](https://codeclimate.com/github/Rafase282/SlackNPodio) [![dependencies Status](https://david-dm.org/Rafase282/SlackNPodio/status.svg)](https://david-dm.org/Rafase282/SlackNPodio) [![devDependencies Status](https://david-dm.org/Rafase282/SlackNPodio/dev-status.svg)](https://david-dm.org/Rafase282/SlackNPodio?type=dev) [![bitHound Overall Score](https://www.bithound.io/github/Rafase282/SlackNPodio/badges/score.svg)](https://www.bithound.io/github/Rafase282/SlackNPodio) [![bitHound Code](https://www.bithound.io/github/Rafase282/SlackNPodio/badges/code.svg)](https://www.bithound.io/github/Rafase282/SlackNPodio) [![bitHound Dependencies](https://www.bithound.io/github/Rafase282/SlackNPodio/badges/dependencies.svg)](https://www.bithound.io/github/Rafase282/SlackNPodio/master/dependencies/npm) [![bitHound Dev Dependencies](https://www.bithound.io/github/Rafase282/SlackNPodio/badges/devDependencies.svg)](https://www.bithound.io/github/Rafase282/SlackNPodio/master/dependencies/npm)
+
 # SlackNPodio
 
 Allows team members to interact with data from Podio by using commands within a Slack channel.<br>
 Any team member can easily retrieve information, or make updates without ever opening a browser.<br>
 Even team members without a Podio account now have the ability to interact with Podio right from within a Slack channel.
 
-## Usage
+## Usage:
 
 ```
 command
@@ -61,16 +71,48 @@ As any User, I want to learn how to utilize these commands so that I can use all
 @podiobot: The proper syntax for the [command] is: [command syntax]
 ```
 
-## SETUP
+## SETUP:
 
 1. Download and run `npm install`
 2. Rename `sample.env` to `.env`
 3. Fill out the `.env` file with the right credentials.
-4. Run with `node bot.js` or `npm start`
+4. Run with `npm start`
 
-Optionally, you can llint with `npm run lint`
+## Contributing:
 
-### .env file
+If you want to contribute to the project, you have to keep in mind certain guidelines.
+
+1. We use as much functional programming as possible. Try to use pure functions whenever possible. This means the functions do one thing and one thing only. However, in some cases that will not be the case, you might have to call another function to get a value inside another and so on.
+2. Functions that require interaction with the Podio API or Slack API must go on the `bot/bot.js` file.
+3. Functions that do not interact with podio or slack directly, but rather an object or other data is a "helper function" and must go on `bot/helper.js`.
+4. For every function you create, please also create a suitable test for it at `test/test-bot.js`. We also provide sample Podio API responses in case you need to work with it.
+5. Please provide proper documentation for the function.
+
+  ```javascript
+  /**
+  * Retrieves the ID for a field value.
+  * @param {Array} options
+  * @param {String} name
+  * @return {Number}
+  **/
+  const getFieldValueID = exports.getFieldValueID = (options, value) => {
+  return filterFields(options, value).id;
+  }
+  ```
+
+6. Please notice that for the functions created, they have a specific declaration that allows to be used in other files via `module.exports`. This is very important and what allows us to use the helper functions inside and outside of the file, along with testing them.
+
+  ```javascript
+  const getFieldValueID = exports.getFieldValueID = (options, value) => filterFields(options, value).id;
+  ```
+
+7. Always run `npm run lint` to lint and make sure there are not things to fix.
+8. Always run `npm run test` and make sure all test pass before submining a pull request. 9.
+9. Last but not least, we use ES6 and beyond. So please respect that.
+
+If you have any questions please open an issue. You can also reach me at [![Gitter](https://badges.gitter.im/Rafase282/SlackNPodio.svg)](https://gitter.im/Rafase282/SlackNPodio?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge).
+
+  ### .env file
 
 The following is what is needed in the `.env` file to have things working out properly.
 
