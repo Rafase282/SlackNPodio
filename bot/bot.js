@@ -51,7 +51,7 @@ const getValue = exports.getValue = (item_name, field_name) => {
     let res = bot.filterFields(item.fields, field_name);
     if (typeof res !== 'undefined') {
       //Returns either a number, string, or whole value.
-      res = bot.checkRes(res.values[0].value);
+      res = bot.checkValue(res.values[0].value);
     }
       return `Item: ${item_name}, Field: ${field_name}, Value: ${res}`;
   });

@@ -1,29 +1,59 @@
 'use strict';
 
-// Function to filter array of fields by label or text
+/**
+ * Filters an array of "fields" by label or text value
+ * @param {Array} fields
+ * @param {String} name
+ * @return {Object}
+**/
 const filterFields = exports.filterFields = (fields, name) => {
   return fields.filter((field) => field.label === name || field.text === name)[0];
 }
-// Gets item's ID
+/**
+ * Retrieves the ID for an Item object.
+ * @param {Object} item
+ * @return {Number}
+**/
 const getItemID = exports.getItemID = (item) => item.item_id;
-// Gets field id
+/**
+ * Retrieves the field ID for an item by field name.
+ * @param {Object} item
+ * @param {String} name
+ * @return {Number}
+**/
 const getFieldID = exports.getFieldID = (item, name) => {
   return filterFields(item.fields, name).field_id;
 }
-// Gets field's value id
-const getFieldValueID = exports.getFieldValueID = (options_arr, field_value) => {
-  return filterFields(options_arr, field_value).id;
+/**
+ * Retrieves the ID for a field value.
+ * @param {Array} options
+ * @param {String} name
+ * @return {Number}
+**/
+const getFieldValueID = exports.getFieldValueID = (options, value) => {
+  return filterFields(options, value).id;
 }
-// Show Help
+/**
+ * Provides useful information for the user.
+ * @return {String}
+**/
 const showHelp = exports.showHelp = () => {
   const help = `Show help message.`;
   return help;
 }
-// Retrieves URL
-const getURL = exports.getURL = (itemObj) => itemObj.link;
-// Check type of response
-const checkRes = exports.checkRes = (res) => {
-  return parseInt(res, 10) || res.text || (typeof res === 'object'
-    ? JSON.stringify(res)
-    : res);
+/**
+ * Retrieves the link for the item.
+ * @param {Object} item
+ * @return {String}
+**/
+const getURL = exports.getURL = (item) => item.link;
+/**
+ * Validates the type of response and returns the right value.
+ * @param {Object} value
+ * @return {Number || String}
+**/
+const checkValue = exports.checkValue = (value) => {
+  return parseInt(value, 10) || value.text || (typeof value === 'object'
+    ? JSON.stringify(value)
+    : value);
 };

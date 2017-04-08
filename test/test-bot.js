@@ -83,16 +83,16 @@ describe('Test helper functions', () => {
       done();
   })
   it('Retrieves the right response (number, string, object, etc)', (done) => {
-    expect(app.helper.checkRes(item.fields[0].values[0].value))
+    expect(app.helper.checkValue(item.fields[0].values[0].value))
       .toBeA('string', 'It should return a title string.')
       .toEqual('Another', 'It should be equal to "Another"');
-    expect(app.helper.checkRes(item.fields[1].values[0].value))
+    expect(app.helper.checkValue(item.fields[1].values[0].value))
       .toBeA('string', 'It should return a category text.')
       .toEqual('Live', 'It should be equal to "Another"');
-    expect(app.helper.checkRes(item.fields[3].values[0].value))
+    expect(app.helper.checkValue(item.fields[3].values[0].value))
       .toBeA('number', 'It should return a number.')
       .toEqual(282, 'It should be equal to 282');
-    expect(JSON.parse(app.helper.checkRes(item.fields[4].values[0].value)))
+    expect(JSON.parse(app.helper.checkValue(item.fields[4].values[0].value)))
       .toBeA('object', 'It should return an object.');
     done();
   })
