@@ -1,1 +1,1 @@
-web: nodemon bot.js
+web: nodemon ./bin/www
