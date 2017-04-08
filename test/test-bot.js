@@ -1,25 +1,26 @@
 'use strict';
 
 //Require the dev-dependencies
-const bot = require('../bot/bot');
+const podio = require('../bot/podio');
 const helper = require('../bot/helper');
+const bot = require('../bot/bot');
+const app = {podio, helper, bot};
 const expect = require('expect');
 const item = require('./item').items[0];
-const app = {bot, helper};
 
 //Globals
 const url = item.link;
 
 describe('Test Functions from Bot', () => {
   it('Retrievs "Another" Item', (done) => {
-    const res = app.bot.getPodioItem('Another');
+    const res = app.podio.getPodioItem('Another');
     expect(res)
       .toBeA('object', 'The result should be an object.');
     done();
   });
   it('Provides message with Item\' url', (done) => {
     const msg = `Item: Another, Item Link: ${url}`;
-    app.bot.getURL('Another')
+    app.podio.getURL('Another')
       .then((res)=>{
         expect(res)
           .toBeA('string', 'It should return a message with the url.')
@@ -28,7 +29,7 @@ describe('Test Functions from Bot', () => {
       done();
   })
   it('Retrieves field\' value for Specified item', (done) => {
-    app.bot.getValue('Another', 'Status')
+    app.podio.getValue('Another', 'Status')
       .then((res)=>{
         expect(res)
           .toBeA('string', 'It should return a message with the url.')
@@ -37,7 +38,7 @@ describe('Test Functions from Bot', () => {
       done();
   })
   it('Sets field value for item', (done) => {
-    app.bot.setValue('Another', 'Status', 'Live')
+    app.podio.setValue('Another', 'Status', 'Live')
       .then((res)=>{
         expect(res)
           .toBeA('string', 'It should return a message with the url.')
@@ -94,6 +95,12 @@ describe('Test helper functions', () => {
       .toEqual(282, 'It should be equal to 282');
     expect(JSON.parse(app.helper.checkValue(item.fields[4].values[0].value)))
       .toBeA('object', 'It should return an object.');
+    done();
+  })
+  it('Generates an action object from string', (done) => {
+    expect(app.helper.handleInput('@podio Another get Status'))
+      .toBeA('object', 'It should return an action object.')
+      //.toContainKey(['keyword', 'item', 'cmd', 'field', 'value', 'all']);
     done();
   })
 });

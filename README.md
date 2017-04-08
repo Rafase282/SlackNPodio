@@ -83,10 +83,11 @@ As any User, I want to learn how to utilize these commands so that I can use all
 If you want to contribute to the project, you have to keep in mind certain guidelines.
 
 1. We use as much functional programming as possible. Try to use pure functions whenever possible. This means the functions do one thing and one thing only. However, in some cases that will not be the case, you might have to call another function to get a value inside another and so on.
-2. Functions that require interaction with the Podio API or Slack API must go on the `bot/bot.js` file.
-3. Functions that do not interact with podio or slack directly, but rather an object or other data is a "helper function" and must go on `bot/helper.js`.
-4. For every function you create, please also create a suitable test for it at `test/test-bot.js`. We also provide sample Podio API responses in case you need to work with it.
-5. Please provide proper documentation for the function.
+2. Functions that require interaction with the Podio API must go on the `bot/bot.js` file.
+3. Functions that require interaction with the slack api must go on the `bot/slack.js` file.
+4. Functions that do not interact with podio or slack directly, but rather an object or other data is a "helper function" and must go on `bot/helper.js`.
+5. For every function you create, please also create a suitable test for it at `test/test-bot.js`. We also provide sample Podio API responses in case you need to work with it.
+6. Please provide proper documentation for the function.
 
   ```javascript
   /**
@@ -100,19 +101,20 @@ If you want to contribute to the project, you have to keep in mind certain guide
   }
   ```
 
-6. Please notice that for the functions created, they have a specific declaration that allows to be used in other files via `module.exports`. This is very important and what allows us to use the helper functions inside and outside of the file, along with testing them.
+7. Please notice that for the functions created, they have a specific declaration that allows to be used in other files via `module.exports`. This is very important and what allows us to use the helper functions inside and outside of the file, along with testing them.
 
   ```javascript
   const getFieldValueID = exports.getFieldValueID = (options, value) => filterFields(options, value).id;
   ```
 
-7. Always run `npm run lint` to lint and make sure there are not things to fix.
-8. Always run `npm run test` and make sure all test pass before submining a pull request. 9.
-9. Last but not least, we use ES6 and beyond. So please respect that.
+8. Always run `npm run lint` to lint and make sure there are not things to fix.
+
+9. Always run `npm run test` and make sure all test pass before submining a pull request. 9.
+10. Last but not least, we use ES6 and beyond. So please respect that.
 
 If you have any questions please open an issue. You can also reach me at [![Gitter](https://badges.gitter.im/Rafase282/SlackNPodio.svg)](https://gitter.im/Rafase282/SlackNPodio?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge).
 
-  ### .env file
+### .env file
 
 The following is what is needed in the `.env` file to have things working out properly.
 

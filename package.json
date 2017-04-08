@@ -2,11 +2,11 @@
   "name": "slacknpodio",
   "version": "1.0.0",
   "description": "Creates `@podio` command capable of retrieving and updating information to/from podio via slack.",
-  "main": "bot/bot.js",
+  "main": "bot/slack.js",
   "scripts": {
-    "test": "mocha test/test-bot.js || true",
-    "start": "nodemon bot/bot.js",
-    "lint": "eslint . || true"
+    "test": "clear && mocha test/test-bot.js || true",
+    "start": "clear && nodemon bot/slack.js",
+    "lint": "clear && eslint . || true"
   },
   "keywords": [
     "Podio",

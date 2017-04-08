@@ -5,7 +5,7 @@
  * @param {Array} fields
  * @param {String} name
  * @return {Object}
-**/
+ **/
 const filterFields = exports.filterFields = (fields, name) => {
   return fields.filter((field) => field.label === name || field.text === name)[0];
 }
@@ -13,14 +13,14 @@ const filterFields = exports.filterFields = (fields, name) => {
  * Retrieves the ID for an Item object.
  * @param {Object} item
  * @return {Number}
-**/
+ **/
 const getItemID = exports.getItemID = (item) => item.item_id;
 /**
  * Retrieves the field ID for an item by field name.
  * @param {Object} item
  * @param {String} name
  * @return {Number}
-**/
+ **/
 const getFieldID = exports.getFieldID = (item, name) => {
   return filterFields(item.fields, name).field_id;
 }
@@ -29,14 +29,14 @@ const getFieldID = exports.getFieldID = (item, name) => {
  * @param {Array} options
  * @param {String} name
  * @return {Number}
-**/
+ **/
 const getFieldValueID = exports.getFieldValueID = (options, value) => {
   return filterFields(options, value).id;
 }
 /**
  * Provides useful information for the user.
  * @return {String}
-**/
+ **/
 const showHelp = exports.showHelp = () => {
   const help = `Show help message.`;
   return help;
@@ -45,15 +45,32 @@ const showHelp = exports.showHelp = () => {
  * Retrieves the link for the item.
  * @param {Object} item
  * @return {String}
-**/
+ **/
 const getURL = exports.getURL = (item) => item.link;
 /**
  * Validates the type of response and returns the right value.
  * @param {Object} value
  * @return {Number || String}
-**/
+ **/
 const checkValue = exports.checkValue = (value) => {
-  return parseInt(value, 10) || value.text || (typeof value === 'object'
-    ? JSON.stringify(value)
-    : value);
+  return parseInt(value, 10) || value.text || (typeof value === 'object' ?
+    JSON.stringify(value) :
+    value);
+};
+/**
+ * Takes a message as input and breaks it down into multiple parts
+ * to get actions and data.
+ * @param {String} input
+ * @return {Object}
+ **/
+const handleInput = exports.handleInput = (input) => {
+  const msg = input.split(' ');
+  return {
+    keyword: msg[0],
+    item: msg[1],
+    cmd: msg[2] || msg[1],
+    field: msg[3],
+    value: msg[4],
+    all: [...msg]
+  }
 };

@@ -1,1 +1,1 @@
-web: nodemon bot/bot.js
+web: nodemon bot/slack.js
