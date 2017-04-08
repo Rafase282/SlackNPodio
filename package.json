@@ -27,12 +27,12 @@
   "dependencies": {
     "@slack/client": "^3.9.0",
     "dotenv": "^4.0.0",
-    "eslint": "^3.19.0",
     "nodemon": "^1.11.0",
     "podio-js": "^1.6.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "eslint": "^3.19.0",
     "expect": "^1.20.2",
     "mocha": "^3.2.0"
   }

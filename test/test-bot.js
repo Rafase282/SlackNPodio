@@ -2,12 +2,11 @@
 
 //Require the dev-dependencies
 const chai = require('chai');
-const app = {
-  bot: require('../bot/bot'),
-  helper: require('../bot/helper')
-};
+const bot = require('../bot/bot');
+const helper = require('../bot/helper');
 const expect = require('expect');
 const item = require('./item').items[0];
+const app = {bot, helper};
 chai.should();
 
 //Globals
