@@ -1,16 +1,14 @@
 'use strict';
 
 //Require the dev-dependencies
-const chai = require('chai');
 const bot = require('../bot/bot');
 const helper = require('../bot/helper');
 const expect = require('expect');
 const item = require('./item').items[0];
 const app = {bot, helper};
-chai.should();
 
 //Globals
-const url = 'https://podio.com/ghold/seanlouistestspace/apps/podioapp/items/2';
+const url = item.link;
 
 describe('Test Functions from Bot', () => {
   it('Retrievs "Another" Item', (done) => {
@@ -30,7 +28,7 @@ describe('Test Functions from Bot', () => {
       done();
   })
   it('Retrieves field\' value for Specified item', (done) => {
-    app.bot.getStatus('Another', 'Status')
+    app.bot.getValue('Another', 'Status')
       .then((res)=>{
         expect(res)
           .toBeA('string', 'It should return a message with the url.')
@@ -39,7 +37,7 @@ describe('Test Functions from Bot', () => {
       done();
   })
   it('Sets field value for item', (done) => {
-    app.bot.setStatus('Another', 'Status', 'Live')
+    app.bot.setValue('Another', 'Status', 'Live')
       .then((res)=>{
         expect(res)
           .toBeA('string', 'It should return a message with the url.')
@@ -81,7 +79,21 @@ describe('Test helper functions', () => {
   })
   it('Retrieves the item id', (done) => {
     expect(app.helper.getItemID(item))
-      .toBeA('number', 'It should return a number.')
+      .toBeA('number', 'It should return a number.');
       done();
+  })
+  it('Retrieves the right response (number, string, object, etc)', (done) => {
+    expect(app.helper.checkRes(item.fields[0].values[0].value))
+      .toBeA('string', 'It should return a title string.')
+      .toEqual('Another', 'It should be equal to "Another"');
+    expect(app.helper.checkRes(item.fields[1].values[0].value))
+      .toBeA('string', 'It should return a category text.')
+      .toEqual('Live', 'It should be equal to "Another"');
+    expect(app.helper.checkRes(item.fields[3].values[0].value))
+      .toBeA('number', 'It should return a number.')
+      .toEqual(282, 'It should be equal to 282');
+    expect(JSON.parse(app.helper.checkRes(item.fields[4].values[0].value)))
+      .toBeA('object', 'It should return an object.');
+    done();
   })
 });

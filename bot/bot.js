@@ -45,23 +45,20 @@ const getURL = exports.getURL = (name) => getPodioItem(name).then((item) =>
 /* Main function for retrieving field values
  * when you know the item's excat title, it depends on
  * getPodioItem to find the right item.
- * TODO: Decouple more. Make a function to handle res,
- * what should be the final response?
  */
-const getStatus = exports.getStatus = (item_name, field_name) => {
+const getValue = exports.getValue = (item_name, field_name) => {
   return getPodioItem(item_name).then((item) => {
-    let res = bot.filterFields(item.fields, field_name).values[0].value;
-    //Returns either a number, string, or whole value.
-    res = parseInt(res, 10) || res.text || (typeof res === 'object'
-      ? JSON.stringify(res)
-      : res);
+    let res = bot.filterFields(item.fields, field_name);
+    if (typeof res !== 'undefined') {
+      //Returns either a number, string, or whole value.
+      res = bot.checkRes(res.values[0].value);
+    }
       return `Item: ${item_name}, Field: ${field_name}, Value: ${res}`;
   });
 }
-
 // Sets status field to value Active or Inactive
 //Action: @podio Item's Name set Field's Name Value
-const setStatus = exports.setStatus = (item_name, field_name, field_value) => {
+const setValue = exports.setValue = (item_name, field_name, field_value) => {
   return getPodioItem(item_name).then((item) => {
     // Check why we are getting the second one, this seems hardcoded.
     const options = item.fields[1].config.settings.options;
@@ -121,12 +118,12 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
     const value = msg[4];
     switch (true) {
       case action === 'get':
-        getStatus(item, field, channel).catch((err) => {
+        getValue(item, field, channel).catch((err) => {
           console.log(err);
         }).then((msg) => rtm.sendMessage(msg, channel));
         break;
       case action === 'set':
-        setStatus(item, field, value, channel).catch((err) => {
+        setValue(item, field, value, channel).catch((err) => {
           console.log(err);
         }).then((msg) => rtm.sendMessage(msg, channel));
         break;
