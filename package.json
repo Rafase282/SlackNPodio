@@ -5,7 +5,7 @@
   "main": "bot/slack.js",
   "scripts": {
     "test": "clear && mocha test/test-bot.js || true",
-    "start": "clear && nodemon bot/slack.js",
+    "start": "clear && node bot/slack.js",
     "lint": "clear && eslint . || true"
   },
   "keywords": [
@@ -27,7 +27,6 @@
   "dependencies": {
     "@slack/client": "^3.9.0",
     "dotenv": "^4.0.0",
-    "nodemon": "^1.11.0",
     "podio-js": "^1.6.0"
   },
   "devDependencies": {
