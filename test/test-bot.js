@@ -56,7 +56,7 @@ describe('Test helper functions', () => {
   })
   it('Shows help message', (done) => {
     expect(app.helper.showHelp())
-      .toBeA('string', 'It should return url string.');
+      .toBeA('string', 'It should return a help message.');
       done();
   })
   it('Retrieves ID for the category value', (done) => {

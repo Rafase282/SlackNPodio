@@ -38,8 +38,7 @@ const getFieldValueID = exports.getFieldValueID = (options, value) => {
  * @return {String}
  **/
 const showHelp = exports.showHelp = () => {
-  return
-  `*SlacknPodio Usage:*
+  return `*SlacknPodio Usage:*
 
     SlacknPodio allows you to gather information from your Podio account.
     **This is a work in progress and does not currently represent the available commands.
