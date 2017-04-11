@@ -55,13 +55,13 @@ const getURL = exports.getURL = (name) => getPodioItem(name).then((item) =>
  * @return {String}
  **/
 const getValue = exports.getValue = (item, name) => {
-  return getPodioItem(item).then((item) => {
-    let res = app.helper.filterFields(item.fields, name);
+  return getPodioItem(item).then((itemObj) => {
+    let res = app.helper.filterFields(itemObj.fields, name);
     if (typeof res !== 'undefined') {
       //Returns either a number, string, or whole value.
       res = app.helper.checkValue(res.values[0].value);
     }
-      return `Item: ${item.title}, Field: ${name}, Value: ${res}`;
+      return `Item: ${item}, Field: ${name}, Value: ${res}`;
   });
 }
 /**
@@ -74,9 +74,9 @@ const getValue = exports.getValue = (item, name) => {
  * @return {String}
  **/
 const setValue = exports.setValue = (item, name, value) => {
-  return getPodioItem(item).then((item) => {
-    const options = item.fields[1].config.settings.options;
-    const item_id = app.helper.getItemID(item);
+  return getPodioItem(item).then((itemObj) => {
+    const options = itemObj.fields[1].config.settings.options;
+    const item_id = app.helper.getItemID(itemObj);
     let fieldID = value;
     let data = {};
     if (name === 'Category' || name === 'category') {
@@ -87,7 +87,7 @@ const setValue = exports.setValue = (item, name, value) => {
     }
     data[name.toLowerCase()] = fieldID;
     return podio.request('PUT', `/item/${item_id}/value/`, data).then((res) => {
-      return `Item: ${item.title}, Field: ${name}, Value set to: ${value}`;
+      return `Item: ${item}, Field: ${name}, Value set to: ${value}`;
     });
   });
 }

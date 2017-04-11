@@ -15,7 +15,7 @@ const runAction = exports.runAction = (req) => {
       return app.podio.getValue(req.item, req.field).catch((err) => {
         console.log(err);
       }).then((msg) => msg);
-    case req.cm === 'set':
+    case req.cmd === 'set':
       return app.podio.setValue(req.item, req.field, req.value).catch((err) => {
         console.log(err);
       }).then((msg) => msg);

@@ -38,7 +38,7 @@ const getFieldValueID = exports.getFieldValueID = (options, value) => {
  * @return {String}
  **/
 const showHelp = exports.showHelp = () => {
-  const usage =
+  return
   `*SlacknPodio Usage:*
 
     SlacknPodio allows you to gather information from your Podio account.
@@ -66,7 +66,6 @@ const showHelp = exports.showHelp = () => {
     \`@podio get --help\`   Displays this message.
     \`@podio get --item "Another" --field "Status"
   `;
-return usage;
 }
 /**
  * Retrieves the link for the item.
@@ -99,5 +98,5 @@ const handleInput = exports.handleInput = (input) => {
     field: msg[3],
     value: msg[4],
     all: [...msg]
-  }
+  };
 };
