@@ -72,6 +72,45 @@ As any User, I want to learn how to utilize these commands so that I can use all
 3. Fill out the `.env` file with the right credentials.
 4. Run with `npm start`
 
+## App Structure:
+
+```
+SlackNPodio/
+├── bot               //Bot App directory
+│   ├── bot.js        //Handles logic related to the bot
+│   ├── helper.js     //Helper functions to deal with data
+│   ├── podio.js      //Handles Podio api requests
+│   └── slack.js      //Handles Slack events
+├── LICENSE
+├── package.json
+├── Procfile          //Run command for Heroku
+├── README.md
+├── sample.env        //API keys and secrets
+└── test              //Test are run here
+    ├── item.js       //Sample response object
+    └── test-bot.js   //Test for the app
+```
+
+### bot.js:
+
+All functions and code related to the bot goes here. This includes but is not limited to logic that specifues which functions to run based on the user input.
+
+### helper.js:
+
+Functions that do not directly deal with any api requests go here. This includes but is not limited to pure functions, and functions that deal with objects.
+
+### podio.js:
+
+Any functions or code directly related to the podio api goes here.
+
+### slack.js:
+
+Functions that deal directly with the slack api goes here. Normally functions to handle events, like when a message arrives and to send data to the slack chat.
+
+### test-bot.js:
+
+All test for the app go here.
+
 ## Contributing:
 
 If you want to contribute to the project, you have to keep in mind certain guidelines.
