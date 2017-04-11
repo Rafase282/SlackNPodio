@@ -38,8 +38,35 @@ const getFieldValueID = exports.getFieldValueID = (options, value) => {
  * @return {String}
  **/
 const showHelp = exports.showHelp = () => {
-  const help = `Show help message.`;
-  return help;
+  const usage =
+  `*SlacknPodio Usage:*
+
+    SlacknPodio allows you to gather information from your Podio account.
+    **This is a work in progress and does not currently represent the available commands.
+
+  *Synopsis*
+
+    \`@podio <command> <options>\`
+
+  *Command List*
+
+    *get*       Retrieves field value for specified item and field.
+    *set*       Updates field value for specified item.
+
+  *Options*
+
+    *-h, --help*      Prints this usage guide.
+    *-i, --item*      The name of the item to work on.
+    *-f, --field*     Field's name. Needed when retrieving and setting information.
+    *-u, --url*       Used to retrieve the Item's link.
+    *-v, --value*     Used to provide field's value.
+
+  *Examples:*
+
+    \`@podio get --help\`   Displays this message.
+    \`@podio get --item "Another" --field "Status"
+  `;
+return usage;
 }
 /**
  * Retrieves the link for the item.
