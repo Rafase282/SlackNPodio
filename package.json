@@ -1,6 +1,6 @@
 {
   "name": "slacknpodio",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Creates `@podio` command capable of retrieving and updating information to/from podio via slack.",
   "main": "bot/slack.js",
   "scripts": {
@@ -27,11 +27,19 @@
   "dependencies": {
     "@slack/client": "^3.9.0",
     "dotenv": "^4.0.0",
-    "podio-js": "^1.6.0"
+    "podio-js": "^1.6.0",
+    "yargs": "^7.0.2"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
     "expect": "^1.20.2",
     "mocha": "^3.2.0"
+  },
+  "yargs": {
+    "short-option-groups": true,
+    "camel-case-expansion": true,
+    "dot-notation": true,
+    "parse-numbers": true,
+    "boolean-negation": true
   }
 }

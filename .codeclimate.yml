@@ -1,7 +1,14 @@
 ---
 engines:
+  csslint:
+    enabled: true
   duplication:
     enabled: true
+    checks:
+      Similar code:
+        enabled: false
+      Identical code:
+        enabled: true
     config:
       languages:
       - ruby
@@ -14,6 +21,7 @@ engines:
     enabled: true
 ratings:
   paths:
+  - "**.css"
   - "**.inc"
   - "**.js"
   - "**.jsx"
@@ -22,4 +30,5 @@ ratings:
   - "**.py"
   - "**.rb"
 exclude_paths:
-- test/
+- tests/
+- docs/

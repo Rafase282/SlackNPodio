@@ -7,9 +7,15 @@ const bot = require('../bot/bot');
 const app = {podio, helper, bot};
 const expect = require('expect');
 const item = require('./item').items[0];
+const files = require('./files');
 
 //Globals
 const url = item.link;
+const files_title = `*List of up to 3 files from items sorted by name in descending order, page 0:*\n`
+const list_of_files = `*File:* Web Developer Resume.pdf, *size:* 135218 kb, *link:* https://files.podio.com/323317004
+*File:* Web Developer Resume.docx, *size:* 21554 kb, *link:* https://files.podio.com/325016329
+*File:* jerry-seinfeld-deal-with-it1.gif, *size:* null, *link:* https://app.box.com/s/vwsd80f6tov1cnxoeuoid5ar3qlysv48\n`;
+console.log(list_of_files.length);
 
 describe('Test Functions from Bot', () => {
   it('Retrievs "Another" Item', (done) => {
@@ -42,6 +48,15 @@ describe('Test Functions from Bot', () => {
       .then((res)=>{
         expect(res)
           .toBeA('string', 'It should return a message with the url.')
+      })
+      done();
+  })
+  it('Get a llist of files in the app', (done) => {
+    app.podio.getFiles('item', 3, 'name', 0, true)
+      .then((res)=>{
+        expect(res)
+          .toBeA('string', 'It should return a message with rich format.')
+          .toEqual(files_title + list_of_files, `It should be the same as ${files_title + list_of_files}`);
       })
       done();
   })
@@ -97,10 +112,12 @@ describe('Test helper functions', () => {
       .toBeA('object', 'It should return an object.');
     done();
   })
-  it('Generates an action object from string', (done) => {
-    expect(app.helper.handleInput('@podio Another get Status'))
-      .toBeA('object', 'It should return an action object.')
-      //.toContainKey(['keyword', 'item', 'cmd', 'field', 'value', 'all']);
+  it('Retrieves file information from response', (done) => {
+    expect(app.helper.listFiles(files))
+      .toBeA('string', 'It should return richt text using markdown')
+      .toEqual(list_of_files, `The string should be ${list_of_files}`)
+    expect(app.helper.listFiles(files).length)
+      .toEqual(list_of_files.length, `The string should be ${list_of_files.length} characters long`)
     done();
   })
 });
