@@ -40,31 +40,15 @@ const getFieldValueID = exports.getFieldValueID = (options, value) => {
 const showHelp = exports.showHelp = () => {
   return `*SlacknPodio Usage:*
 
-    SlacknPodio allows you to gather information from your Podio account.
-    **This is a work in progress and does not currently represent the available commands.
+  Allows team members to interact with data from Podio by using commands within a Slack channel.
+  Any team member can easily retrieve information, or make updates without ever opening a browser.
+  Even team members without a Podio account now have the ability to interact with Podio right from within a Slack channel.
 
   *Synopsis*
 
-    \`@podio <command> <options>\`
-
-  *Command List*
-
-    *get*       Retrieves field value for specified item and field.
-    *set*       Updates field value for specified item.
-
-  *Options*
-
-    *-h, --help*      Prints this usage guide.
-    *-i, --item*      The name of the item to work on.
-    *-f, --field*     Field's name. Needed when retrieving and setting information.
-    *-u, --url*       Used to retrieve the Item's link.
-    *-v, --value*     Used to provide field's value.
-
-  *Examples:*
-
-    \`@podio get --help\`   Displays this message.
-    \`@podio get --item "Another" --field "Status"
+    \`@podio [options]\`
   `;
+
 }
 /**
  * Retrieves the link for the item.

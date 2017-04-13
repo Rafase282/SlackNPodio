@@ -99,8 +99,8 @@ const setValue = exports.setValue = (item, name, value) => {
  **/
 const authenticatePodio = exports.authenticatePodio = (callback, errorCallback) => {
   return podio.authenticateWithApp(process.env.appID, process.env.appToken, (err) => {
-    errorCallback(err);
-    return podio.isAuthenticated().then(() => {
+    if (err) errorCallback(err);
+    podio.isAuthenticated().then(() => {
       callback();
     }).catch((err) => {
       errorCallback(err);
