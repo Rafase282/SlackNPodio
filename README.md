@@ -8,63 +8,6 @@ Even team members without a Podio account now have the ability to interact with 
 
 [![Gitter](https://badges.gitter.im/Rafase282/SlackNPodio.svg)](https://gitter.im/Rafase282/SlackNPodio?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Code Climate](https://codeclimate.com/github/Rafase282/SlackNPodio/badges/gpa.svg)](https://codeclimate.com/github/Rafase282/SlackNPodio) [![Issue Count](https://codeclimate.com/github/Rafase282/SlackNPodio/badges/issue_count.svg)](https://codeclimate.com/github/Rafase282/SlackNPodio) [![dependencies Status](https://david-dm.org/Rafase282/SlackNPodio/status.svg)](https://david-dm.org/Rafase282/SlackNPodio) [![devDependencies Status](https://david-dm.org/Rafase282/SlackNPodio/dev-status.svg)](https://david-dm.org/Rafase282/SlackNPodio?type=dev) [![bitHound Overall Score](https://www.bithound.io/github/Rafase282/SlackNPodio/badges/score.svg)](https://www.bithound.io/github/Rafase282/SlackNPodio) [![bitHound Code](https://www.bithound.io/github/Rafase282/SlackNPodio/badges/code.svg)](https://www.bithound.io/github/Rafase282/SlackNPodio) [![bitHound Dependencies](https://www.bithound.io/github/Rafase282/SlackNPodio/badges/dependencies.svg)](https://www.bithound.io/github/Rafase282/SlackNPodio/master/dependencies/npm) [![bitHound Dev Dependencies](https://www.bithound.io/github/Rafase282/SlackNPodio/badges/devDependencies.svg)](https://www.bithound.io/github/Rafase282/SlackNPodio/master/dependencies/npm)
 
-## Usage:
-
-```
-command
-response
-```
-
-**Get Command**: Retrieve field values.
-
-As a Project Stakeholder, I want to retrieve the expected delivery date for my project without logging into Podio so that I can not be frustrated by my lost password or lack of setup account.
-
-```
-@podiobot [project name] get Delivery Date
-@podiobot: [project name] will be delivered by [delivery date value].
-```
-
-As a Project Manager, I want to direct team members to request project status by asking the bot before coming to me so that I can spend more of my time planning than responding to messages.
-
-```
-@podiobot [project name] get Status
-@podiobot: [project name] Status: [Status value]
-```
-
-**Set Command**: Update field values.
-
-As a QA Manager, I want to update the status of a project to 'Production Ready' once I hear back from my QA lead so that I don't have to open a browser, log into Podio, search for the project and make the update.
-
-```
-@podiobot [project name] set Status Production Ready
-@podiobot: [project name] Status: Production Ready
-```
-
-**List Command**: Provides a list of items which match a specific field value.
-
-As a Digital Marketing Manager, I want to see a list of all currently live campaigns so I can make sure a specific campaign launched on time as expected.
-
-```
-@podiobot list [field name] [field value]
-list of [item title] who's [field name] is equal to [field value]
-```
-
-**Help Command**: Provide information on how to interact with the bot.
-
-As any User, I want to learn how to use all of the podiobot commands so I can benefit from the conveniences they provide.
-
-```
-@podiobot help
-[List available commands with descriptions]
-```
-
-As any User, I want to learn how to utilize these commands so that I can use all the great features within podiobot.
-
-```
-@podiobot help [command]
-@podiobot: The proper syntax for the [command] is: [command syntax]
-```
-
 ## SETUP:
 
 1. Download and run `npm install`
@@ -76,19 +19,25 @@ As any User, I want to learn how to utilize these commands so that I can use all
 
 ```
 SlackNPodio/
-├── bot               //Bot App directory
-│   ├── bot.js        //Handles logic related to the bot
-│   ├── helper.js     //Helper functions to deal with data
-│   ├── podio.js      //Handles Podio api requests
-│   └── slack.js      //Handles Slack events
+├── bot                 //Bot App directory
+│   ├── bot.js          //Handles logic related to the bot
+│   ├── cmds            //Yargs commands directory
+│   │   ├── files.js    //Command to get list of files
+│   │   ├── get.js      //Command to get field data
+│   │   ├── set.js      //Command to set field data
+│   │   └── url.js      //Command to get item link
+│   ├── helper.js       //Helper functions to deal with data
+│   ├── podio.js        //Handles Podio api requests
+│   └── slack.js        //Handles Slack events
 ├── LICENSE
 ├── package.json
-├── Procfile          //Run command for Heroku
+├── Procfile            //Run command for Heroku
 ├── README.md
-├── sample.env        //API keys and secrets
-└── test              //Test are run here
-    ├── item.js       //Sample response object
-    └── test-bot.js   //Test for the app
+├── sample.env          //API keys and secrets
+└── test                //Test are run here
+    ├── files.js        //Sample response object for files
+    ├── item.js         //Sample response object for items
+    └── test-bot.js     //Test for the app
 ```
 
 ### bot.js:
