@@ -79,3 +79,25 @@ const listFiles = exports.listFiles = (input) => {
   });
   return output;
 }
+/**
+  * Converts a string to a boolean
+  * source: http://stackoverflow.com/questions/263965
+  * @param {String} input
+  * @return {Boolean}
+**/
+const isTrue = exports.isTrue = (input) => {
+  if (typeof(input) === 'string') {
+    input = input.toLowerCase().trim();
+  }
+  switch (input) {
+    case true:
+    case "true":
+    case 1:
+    case "1":
+    case "on":
+    case "yes":
+      return true;
+    default:
+      return false;
+  }
+}
