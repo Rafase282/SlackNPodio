@@ -11,7 +11,8 @@ const podio = new Podio({
 });
 const app = {helper, bot};
 const podioAuthenticated = exports.podioAuthenticated = false;
-
+exports.WRITE = helper.isTrue(process.env.WRITE);
+exports.READ = helper.isTrue(process.env.READ);
 /**
   * Podio API call to filter items by exact titles.
   *
@@ -34,7 +35,8 @@ const getPodioItem = exports.getPodioItem = (name) => {
     'remember': false
   }
   // Returns Filtered Item Object
-  return podio.request('POST', `/item/app/${process.env.appID}/filter/`, data).then((res) => res.items[0]);
+  return podio.request('POST', `/item/app/${process.env.appID}/filter/`, data)
+    .then((res) => res.items[0]);
 }
 
 /**
@@ -61,7 +63,7 @@ const getValue = exports.getValue = (item, name) => {
       //Returns either a number, string, or whole value.
       res = app.helper.checkValue(res.values[0].value);
     }
-      return `Item: ${item}, Field: ${name}, Value: ${res}`;
+    return `Item: ${item}, Field: ${name}, Value: ${res}`;
   });
 }
 /**

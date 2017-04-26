@@ -15,7 +15,6 @@ const files_title = `*List of up to 3 files from items sorted by name in descend
 const list_of_files = `*File:* Web Developer Resume.pdf, *size:* 135218 kb, *link:* https://files.podio.com/323317004
 *File:* Web Developer Resume.docx, *size:* 21554 kb, *link:* https://files.podio.com/325016329
 *File:* jerry-seinfeld-deal-with-it1.gif, *size:* null, *link:* https://app.box.com/s/vwsd80f6tov1cnxoeuoid5ar3qlysv48\n`;
-console.log(list_of_files.length);
 
 describe('Test Functions from Bot', () => {
   it('Retrievs "Another" Item', (done) => {
