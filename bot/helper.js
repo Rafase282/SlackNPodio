@@ -10,6 +10,50 @@ const filterFields = exports.filterFields = (fields, name) => {
   return fields.filter((field) => field.label === name || field.text === name)[0];
 }
 /**
+  * Receives a String with filter formated like this: "filter1=value1,filter2=value2..." and returns an object
+  * @param {String} filters
+  * @return {Object}
+**/
+const getFiltersObject = exports.getFiltersObject = (fields) => {
+  const fieldsArray = fields.split(",");
+  let fieldsObj = {};
+
+  fieldsArray.forEach((element) => {
+    let tempArray = element.split("=");
+    fieldsObj[tempArray[0]] = tempArray[1];
+  });
+
+  return fieldsObj;
+}
+/**
+  * Receives an object containing all the fields on an item and returns a list with the requested fields
+  * @param {Object} fieldsObj
+  * @param {String} requestedFields
+  * @return {String}
+**/
+const listFields = exports.listFields = (fieldsObj, requestedFields) => {
+  const requestedFieldsArray = requestedFields.split(',');
+  let output = '';
+
+  // Make all requested fields lowercase to make sure they match the field names in Podio
+  let requestedFieldsArrayLower = requestedFieldsArray.map(toLower);
+
+  // output += `*Item:* ${itemTitle}\n`;
+  requestedFieldsArrayLower.forEach((field) => {
+
+    let isFieldInArray = fieldsObj[field] !== undefined ;
+    output += `• *${capitalizeFirstLetter(field)}:* `;
+
+    if (isFieldInArray) {
+      output += `${fieldsObj[field].text}\n`;
+    } else {
+      output += `n/a\n`;
+    }
+  });
+
+  return output;
+}
+/**
   * Retrieves the ID for an Item object.
   * @param {Object} item
   * @return {Number}
@@ -80,6 +124,27 @@ const listFiles = exports.listFiles = (input) => {
   return output;
 }
 /**
+  * Takes response from podio api to get items
+  * and retrieves a list of items
+  * @param {String} input
+  * @return {String} output
+**/
+const listItems = exports.listItems = (input) => {
+  let output = '';
+  let itemsCount = input.counts.item;
+
+  if (itemsCount > 0) {
+    output += `I've found ${itemsCount} items matching your query\n\n`;
+    input.results.forEach((item) => {
+      output += `• *Item:* ${item.title} *Link:* ${item.link}\n`;
+    });
+  } else {
+    output = `*No items were found*`;
+  }
+  
+  return output;
+}
+/**
   * Converts a string to a boolean
   * source: http://stackoverflow.com/questions/263965
   * @param {String} input
@@ -100,4 +165,21 @@ const isTrue = exports.isTrue = (input) => {
     default:
       return false;
   }
+}
+/**
+  * Capitalizes the first letter in a string
+  * source: https://stackoverflow.com/questions/1026069
+  * @param {String} input
+  * @return {String}
+**/
+const capitalizeFirstLetter = exports.capitalizeFirstLetter = (input) => {
+  return input.charAt(0).toUpperCase() + input.slice(1);
+}
+/**
+  * Returns the all lower case version of a string
+  * @param {String} input
+  * @return {String}
+**/
+const toLower = exports.toLower = (input) => {
+  return input.toLowerCase();
 }
