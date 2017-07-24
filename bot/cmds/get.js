@@ -2,6 +2,7 @@
 
 const podio = require('../podio');
 const bot = require('../bot');
+
 exports.command = 'get-field <item> <field>'
 exports.aliases = ['get', 'G', 'retrieve']
 exports.desc = 'Retrieve item\'s field value.'
