@@ -3,12 +3,12 @@
 const podio = require('../podio');
 const bot = require('../bot');
 
-exports.command = 'get-fields-from <query> <fields>'
-exports.aliases = ['gff']
-exports.desc = 'Retrieves the specified fields for the given item'
+exports.command = 'show-all-fields <query>'
+exports.aliases = ['show']
+exports.desc = 'Retrieves all the fields for the given item'
 exports.handler = (argv) => {
   if (podio.READ) {
-    podio.getFieldsForItem(argv.query, argv.fields).then((res) => {
+    podio.showAllFields(argv.query).then((res) => {
       bot.cb(res);
     });
   } else {

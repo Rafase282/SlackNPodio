@@ -26,6 +26,49 @@ const getFiltersObject = exports.getFiltersObject = (fields) => {
   return fieldsObj;
 }
 /**
+  * Receives an array of items and a list of filters and returns the list of items filtered according to the filters provided
+  * @param {String} filters
+  * @param {Array} items
+  * @return {Array}
+**/
+const filterItems = exports.filterItems = (filters, items) => {
+  let processedItems = [];
+  let filtersObject = getFiltersObject(filters);
+
+  processedItems = items.filter((item) => {
+    let valuesMatchesCount = 0;
+    item.fields.forEach((field) => {
+
+      //check if the current property is one of the specified ones in the filters list
+      if (filtersObject.hasOwnProperty(field.external_id)) {
+        //Now let's see if the value matches the one in the filtersObject
+        field.values.forEach((value) => {
+          //value could be an object or a string
+          switch(typeof value.value) {
+            case "object":
+              if ( stringSanitizing(value.value.text).includes(stringSanitizing(filtersObject[field.external_id])) ) {
+                valuesMatchesCount++;
+              }
+              break;
+            case "string":
+            default:
+              if ( stringSanitizing(value.value).includes(stringSanitizing(filtersObject[field.external_id])) ) {
+                valuesMatchesCount++;
+              }
+              break;
+          }
+        });
+      } else {
+        // Do nothing
+      }
+    });
+
+    let isFilterCorrect = ( valuesMatchesCount === Object.getOwnPropertyNames(filtersObject).length );
+    return isFilterCorrect;
+  });
+  return processedItems;
+}
+/**
   * Receives an object containing all the fields on an item and returns a list with the requested fields
   * @param {Object} fieldsObj
   * @param {String} requestedFields
@@ -36,7 +79,7 @@ const listFields = exports.listFields = (fieldsObj, requestedFields) => {
   let output = '';
 
   // Make all requested fields lowercase to make sure they match the field names in Podio
-  let requestedFieldsArrayLower = requestedFieldsArray.map(toLower);
+  let requestedFieldsArrayLower = requestedFieldsArray.map(stringSanitizing);
 
   // output += `*Item:* ${itemTitle}\n`;
   requestedFieldsArrayLower.forEach((field) => {
@@ -51,6 +94,95 @@ const listFields = exports.listFields = (fieldsObj, requestedFields) => {
     }
   });
 
+  return output;
+}
+/**
+  * Receives a field and returns the field type (Array, Object, or String)
+  * @param {Object} field
+  * @return {String}
+**/
+const identifyField = exports.identifyField = (field) => {
+
+  if (Array.isArray(field)) {
+    return 'Array';
+  } else if (typeof field === 'object' ) {
+    return 'Object';
+  } else {
+    return 'String';
+  }
+}
+/**
+  * Receives a field and returns the info in this field as a string depending on the field type (Array, Object, or String)
+  * @param {Object} field
+  * @return {String}
+**/
+const processField = exports.processField = (field) => {
+  let output = '';
+  switch(identifyField(field)) {
+    case 'Array':
+      output = processArrayField(field);
+      break;
+    case 'Object':
+      output = processObjectField(field);
+      break;
+    case 'String':
+      output = processStringField(field);
+      break;
+  }
+  return output;
+}
+/**
+  * Receives a field of type array and returns the info in this field as a string 
+  * @param {Array} arrayField
+  * @return {String}
+**/
+const processArrayField = exports.processArrayField = (arrayField) => {
+  let output = '';
+  arrayField.forEach((element) => {
+    console.log(element);
+    output += processObjectField(element);
+  });
+  return output;
+}
+/**
+  * Receives a field of type object and returns the info in this field as a string
+  * @param {Object} objectField
+  * @return {String}
+**/
+const processObjectField = exports.processObjectField = (objectField) => {
+  let output = '';
+  if (objectField.hasOwnProperty('text')) {
+    console.log(`Text Property: ${objectField.text}`);
+    output += processStringField(objectField.text);
+  } else if (objectField.hasOwnProperty('start_date')) {
+    console.log(`Start_Date: ${objectField.start_date}`);
+    output += processStringField(objectField.start_date);
+  } else if (objectField.hasOwnProperty('name')) {
+    console.log(`Name Property: ${objectField.name}`);
+    output += `${processStringField(objectField.name)} - ${processStringField(objectField.mail)}`;
+  } else {
+    output += 'n/a';
+  }
+  return output;
+}
+/**
+  * Receives a field of type string and returns the info in this field as a string
+  * @param {String} stringField
+  * @return {String}
+**/
+const processStringField = exports.processStringField = (stringField) => stringField;
+/**
+  * Receives an object containing all the fields on an item and returns a list with all the fields and their values
+  * @param {Object} fieldsObj
+  * @return {String}
+**/
+const listAllFields = exports.listAllFields = (fieldsObj) => {
+  let output = '';
+  for(var key in fieldsObj) {
+    if (fieldIsNotHidden(key)) {
+      output += `• *${capitalizeFirstLetter(key)}:* ${processField(fieldsObj[key])}\n`;
+    }
+  }
   return output;
 }
 /**
@@ -107,7 +239,7 @@ const getURL = exports.getURL = (item) => item.link;
 **/
 const checkValue = exports.checkValue = (value) => {
   return parseInt(value, 10) || value.text || (typeof value === 'object' ?
-    JSON.stringify(value) :
+    stringVal(value) :
     value);
 };
 /**
@@ -126,16 +258,17 @@ const listFiles = exports.listFiles = (input) => {
 /**
   * Takes response from podio api to get items
   * and retrieves a list of items
-  * @param {String} input
+  * @param {Object} input
   * @return {String} output
 **/
 const listItems = exports.listItems = (input) => {
   let output = '';
-  let itemsCount = input.counts.item;
+  let itemsObject = input;
+  let itemsCount = Object.keys(itemsObject).length;
 
   if (itemsCount > 0) {
     output += `I've found ${itemsCount} items matching your query\n\n`;
-    input.results.forEach((item) => {
+    itemsObject.forEach((item) => {
       output += `• *Item:* ${item.title} *Link:* ${item.link}\n`;
     });
   } else {
@@ -152,7 +285,7 @@ const listItems = exports.listItems = (input) => {
 **/
 const isTrue = exports.isTrue = (input) => {
   if (typeof(input) === 'string') {
-    input = input.toLowerCase().trim();
+    input = stringSanitizing(input);
   }
   switch (input) {
     case true:
@@ -182,4 +315,29 @@ const capitalizeFirstLetter = exports.capitalizeFirstLetter = (input) => {
 **/
 const toLower = exports.toLower = (input) => {
   return input.toLowerCase();
+}
+/**
+  * Returns the string representation of a given object
+  * @param {Object} input
+  * @return {String}
+**/
+const stringVal = exports.stringVal = (input) => {
+  return JSON.stringify(input);
+}
+/**
+  * Returns a boolean whether or not the field should be returned on the podio requests
+  * @param {Object} input
+  * @return {String}
+**/
+const fieldIsNotHidden = exports.fieldIsNotHidden = (fieldName) => {
+  return !(process.env.ignoreFields.indexOf(fieldName) > -1);
+}
+/**
+  * Takes user input and returns sanitized 
+  * @param {Object} input
+  * @return {String}
+**/
+const stringSanitizing = exports.stringSanitizing = (input) => {
+  let sanitizedString = toLower(input.trim());
+  return sanitizedString;
 }
