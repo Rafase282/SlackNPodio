@@ -25,15 +25,15 @@
   },
   "homepage": "https://github.com/Rafase282/SlackNPodio#readme",
   "dependencies": {
-    "@slack/client": "^3.9.0",
+    "@slack/client": "^3.10.0",
     "dotenv": "^4.0.0",
     "podio-js": "^1.6.0",
-    "yargs": "^7.0.2"
+    "yargs": "^8.0.2"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
+    "eslint": "^4.3.0",
     "expect": "^1.20.2",
-    "mocha": "^3.2.0"
+    "mocha": "^3.4.2"
   },
   "yargs": {
     "short-option-groups": true,
