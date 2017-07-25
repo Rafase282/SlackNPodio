@@ -1,5 +1,7 @@
 'use strict';
 
+/* exported podioAuthenticated */
+
 const Podio = require('podio-js').api;
 const helper = require('./helper');
 const bot = require('./bot');
@@ -55,13 +57,13 @@ const getPodioItemsByFilters = exports.getPodioItemsByFilters = (filters) => {
     "offset": 0,
     "remember": false
   }
-  
+
   bot.cb('Please wait, this could take a few seconds...');
-  
+
   return podio.request('POST', `/item/app/${process.env.appID}/filter/`, filter)
     .then((res) => {
       console.log(app.helper.getFiltersObject(filters));
-     
+
       let filteredItems = app.helper.filterItems(filters, res.items);
       return app.helper.listItems(filteredItems);
     })

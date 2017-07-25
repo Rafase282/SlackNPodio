@@ -1,5 +1,7 @@
 'use strict';
 
+/* exported filterFields listFields */
+
 /**
   * Filters an array of "fields" by label or text value
   * @param {Array} fields
@@ -84,7 +86,7 @@ const listFields = exports.listFields = (fieldsObj, requestedFields) => {
   // output += `*Item:* ${itemTitle}\n`;
   requestedFieldsArrayLower.forEach((field) => {
 
-    let isFieldInArray = fieldsObj[field] !== undefined ;
+    let isFieldInArray = typeof fieldsObj[field] !== "undefined" ;
     output += `• *${capitalizeFirstLetter(field)}:* `;
 
     if (isFieldInArray) {
@@ -132,14 +134,13 @@ const processField = exports.processField = (field) => {
   return output;
 }
 /**
-  * Receives a field of type array and returns the info in this field as a string 
+  * Receives a field of type array and returns the info in this field as a string
   * @param {Array} arrayField
   * @return {String}
 **/
 const processArrayField = exports.processArrayField = (arrayField) => {
   let output = '';
   arrayField.forEach((element) => {
-    console.log(element);
     output += processObjectField(element);
   });
   return output;
@@ -152,13 +153,10 @@ const processArrayField = exports.processArrayField = (arrayField) => {
 const processObjectField = exports.processObjectField = (objectField) => {
   let output = '';
   if (objectField.hasOwnProperty('text')) {
-    console.log(`Text Property: ${objectField.text}`);
     output += processStringField(objectField.text);
   } else if (objectField.hasOwnProperty('start_date')) {
-    console.log(`Start_Date: ${objectField.start_date}`);
     output += processStringField(objectField.start_date);
   } else if (objectField.hasOwnProperty('name')) {
-    console.log(`Name Property: ${objectField.name}`);
     output += `${processStringField(objectField.name)} - ${processStringField(objectField.mail)}`;
   } else {
     output += 'n/a';
@@ -274,7 +272,7 @@ const listItems = exports.listItems = (input) => {
   } else {
     output = `*No items were found*`;
   }
-  
+
   return output;
 }
 /**
@@ -333,7 +331,7 @@ const fieldIsNotHidden = exports.fieldIsNotHidden = (fieldName) => {
   return !(process.env.ignoreFields.indexOf(fieldName) > -1);
 }
 /**
-  * Takes user input and returns sanitized 
+  * Takes user input and returns sanitized
   * @param {Object} input
   * @return {String}
 **/
