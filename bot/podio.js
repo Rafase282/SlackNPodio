@@ -12,7 +12,7 @@ const podio = new Podio({
   clientSecret: process.env.clientSecret
 });
 const app = {helper, bot};
-const podioAuthenticated = exports.podioAuthenticated = false;
+exports.podioAuthenticated = false;
 exports.WRITE = helper.isTrue(process.env.WRITE);
 exports.READ = helper.isTrue(process.env.READ);
 
@@ -37,7 +37,7 @@ const getPodioItem = exports.getPodioItem = (name) => {
     'offset': 0,
     'remember': false
   }
-  console.log(JSON.stringify(data));
+  //console.log(JSON.stringify(data));
   // Returns Filtered Item Object
   return podio.request('POST', `/item/app/${process.env.appID}/filter/`, data)
     .then((res) => res.items[0]);
@@ -47,7 +47,7 @@ const getPodioItem = exports.getPodioItem = (name) => {
   * @param {String} filters
   * @return {Object}
 **/
-const getPodioItemsByFilters = exports.getPodioItemsByFilters = (filters) => {
+exports.getPodioItemsByFilters = (filters) => {
   // console.log(app.helper.getFiltersObject(filters));
   const filter = {
     "sort_by": 'title',
@@ -62,32 +62,29 @@ const getPodioItemsByFilters = exports.getPodioItemsByFilters = (filters) => {
 
   return podio.request('POST', `/item/app/${process.env.appID}/filter/`, filter)
     .then((res) => {
-      console.log(app.helper.getFiltersObject(filters));
-
+      //console.log(app.helper.getFiltersObject(filters));
       let filteredItems = app.helper.filterItems(filters, res.items);
       return app.helper.listItems(filteredItems);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => `${err}`);
 }
 /**
   * Returns an object with all the info related to the Podio Item identify by the ID provided
   * @param {Number} itemId
   * @return {Object}
 **/
-const showAllFields = exports.showAllFields = (query) => {
+exports.showAllFields = (query) => {
   return getPodioItem(query)
     .then((res) => {
       let output = `*Item:* ${res.title}\n*Link:* ${res.link}\n\n`;
       return getPodioItemValues(res.item_id).then((res) => {
-        console.log(`showAllFields: ${JSON.stringify(res)}`);
+        //console.log(`showAllFields: ${JSON.stringify(res)}`);
         return output += app.helper.listAllFields(res);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => `${err}`);
     })
-    .catch((err) => {
-      console.log(`showAllFields: ${err}`);
+    .catch(() => {
+      //console.log(`showAllFields: ${err}`);
       return `I'm sorry, I couldn't find an item by that *title*, please make sure you have the *exact* item title, put the title between quote marks and try again.`;
     });
 }
@@ -120,7 +117,7 @@ const getPodioItems = exports.getPodioItems = (query = 'name', limit = 50, searc
   * @param {String} name
   * @return {String}
 **/
-const getItemsList = exports.getItemsList = (name) => {
+exports.getItemsList = (name) => {
   return getPodioItems(name, 50, 'title', true, true, 0, 'item').then((res) => app.helper.listItems(res.results));
 }
 /**
@@ -130,7 +127,7 @@ const getItemsList = exports.getItemsList = (name) => {
   * @param {String} fields
   * @return {String}
 **/
-const getFieldsForItem = exports.getFieldsForItem = (query, fields) => {
+exports.getFieldsForItem = (query, fields) => {
   return getPodioItem(query)
     .then((res) => {
         let output = `*Item:* ${res.title}\n*Link:* ${res.link}\n\n`;
@@ -139,8 +136,8 @@ const getFieldsForItem = exports.getFieldsForItem = (query, fields) => {
         });
       }
     )
-    .catch((err) => {
-      console.log(`getFieldForItem: ${err}`);
+    .catch(() => {
+      //console.log(`getFieldForItem: ${err}`);
       return `I'm sorry, I couldn't find an item by that *title*, please make sure you have the *exact* item title, put the title between quote marks and try again.`;
     });
 }
@@ -151,7 +148,7 @@ const getFieldsForItem = exports.getFieldsForItem = (query, fields) => {
   * @param {String} name
   * @return {String}
 **/
-const getURL = exports.getURL = (name) => getPodioItem(name).then((item) =>
+exports.getURL = (name) => getPodioItem(name).then((item) =>
   `Item: ${name}, Item Link: ${app.helper.getURL(item)}`);
 /**
   * Retrieves field's value when you know the item's exact title, it depends on
@@ -161,7 +158,7 @@ const getURL = exports.getURL = (name) => getPodioItem(name).then((item) =>
   * @param {String} name
   * @return {String}
 **/
-const getValue = exports.getValue = (item, name) => {
+exports.getValue = (item, name) => {
   return getPodioItem(item).then((itemObj) => {
     let res = app.helper.filterFields(itemObj.fields, name);
     if (typeof res !== 'undefined') {
@@ -180,7 +177,7 @@ const getValue = exports.getValue = (item, name) => {
   * @param {Boolean} bool
   * @return {String}
 **/
-const getFiles = exports.getFiles = (type = 'item', limit = 20, sort = 'name', offset = 0, bool = true) => {
+exports.getFiles = (type = 'item', limit = 20, sort = 'name', offset = 0, bool = true) => {
   return podio.request('GET', `/file/app/${process.env.appID}/?limit=${limit}&offset=${offset}&sort_by=${sort}&sort_desc=${bool}`).then((res) => {
     return `*List of up to ${limit} files from ${type}s sorted by ${sort} in ${bool
       ? 'descending'
@@ -196,7 +193,7 @@ const getFiles = exports.getFiles = (type = 'item', limit = 20, sort = 'name', o
   * @param {String} value
   * @return {String}
 **/
-const setValue = exports.setValue = (item, name, value) => {
+exports.setValue = (item, name, value) => {
   return getPodioItem(item).then((itemObj) => {
     const options = itemObj.fields[1].config.settings.options;
     const item_id = app.helper.getItemID(itemObj);
@@ -209,7 +206,7 @@ const setValue = exports.setValue = (item, name, value) => {
       };
     }
     data[name.toLowerCase()] = fieldID;
-    return podio.request('PUT', `/item/${item_id}/value/`, data).then((res) => {
+    return podio.request('PUT', `/item/${item_id}/value/`, data).then(() => {
       return `Item: ${item}, Field: ${name}, Value set to: ${value}`;
     });
   });
@@ -220,7 +217,7 @@ const setValue = exports.setValue = (item, name, value) => {
   * @param {Function} errorCallback
   * @return {Boolean}
 **/
-const authenticatePodio = exports.authenticatePodio = (callback, errorCallback) => {
+exports.authenticatePodio = (callback, errorCallback) => {
   return podio.authenticateWithApp(process.env.appID, process.env.appToken, (err) => {
     if (err) errorCallback(err);
     podio.isAuthenticated().then(() => {
@@ -232,16 +229,15 @@ const authenticatePodio = exports.authenticatePodio = (callback, errorCallback) 
 }
 
 // Make API request to get push object
-podio.request('get','/item/status').then(function(responseBody) {
-console.log('Push Object received');
+podio.request('get','/item/status').then((responseBody) => {
   // Deliver the push object and create a subscription
-  podio.push(responseBody.push).subscribe(function(payload){
-    console.log('I received a new notification!');
+  podio.push(responseBody.push).subscribe(() =>{
+    // You recived a push notification
   })
-  .then(function(){
+  .then(()=>{
     // The connection has been succesfully established...
   })
-  .catch(function(err){
+  .catch(()=>{
     // There was an error establishing the connection...
   });
 });

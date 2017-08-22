@@ -16,13 +16,13 @@ const app = {podio, helper, bot};
  * @param {Stream} rtmStartData
  * @return {Log}
  **/
-slack.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
-  console.log(`Slack API: Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}, but not yet connected to a channel.`);
+slack.on(CLIENT_EVENTS.RTM.AUTHENTICATED, () => {
+  //console.log(`Slack API: Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}, but not yet connected to a channel.`);
   app.podio.authenticatePodio(() => {
     app.podio.podioAuthenticated = true;
-  }, (err) => {
+  }, () => {
     app.podio.podioAuthenticated = false;
-    console.log('Podio API:', err);
+    //console.log('Podio API:', err);
   });
 });
 
