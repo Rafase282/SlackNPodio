@@ -1,6 +1,6 @@
 {
   "name": "slacknpodio",
-  "version": "1.1.0",
+  "version": "3.0.0",
   "description": "Creates `@podio` command capable of retrieving and updating information to/from podio via slack.",
   "main": "bot/slack.js",
   "scripts": {
@@ -25,15 +25,21 @@
   },
   "homepage": "https://github.com/Rafase282/SlackNPodio#readme",
   "dependencies": {
-    "@slack/client": "^3.9.0",
+    "@slack/client": "^3.10.0",
     "dotenv": "^4.0.0",
     "podio-js": "^1.6.0",
-    "yargs": "^7.0.2"
+    "yargs": "^8.0.2"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
+    "eslint": "^4.3.0",
+    "eslint-config-google": "^0.9.1",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
     "expect": "^1.20.2",
-    "mocha": "^3.2.0"
+    "mocha": "^3.4.2"
   },
   "yargs": {
     "short-option-groups": true,

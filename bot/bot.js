@@ -1,3 +1,5 @@
+/* exported logic */
+
 'use strict';
 
 const podio = require('./podio');
@@ -21,7 +23,7 @@ const parser = exports.parser = yargs
  * @param {Function} cb
  * @return {String} cb(res)
 **/
-const logic = exports.logic = (input, cb) => {
+exports.logic = (input, cb) => {
   exports.cb = cb;
   if (app.podio.podioAuthenticated) {
     parser.parse(input, (err, argv, output) => {

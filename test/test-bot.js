@@ -1,3 +1,5 @@
+/* global describe, it */
+
 'use strict';
 
 //Require the dev-dependencies
@@ -34,6 +36,7 @@ describe('Test Functions from Bot', () => {
       done();
   })
   it('Retrieves field\' value for Specified item', (done) => {
+    const msg = `Item: Another, Field: Status, Value: Live`;
     app.podio.getValue('Another', 'Status')
       .then((res)=>{
         expect(res)

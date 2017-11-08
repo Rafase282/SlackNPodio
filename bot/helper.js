@@ -1,5 +1,7 @@
 'use strict';
 
+/* exported filterFields listFields */
+
 /**
   * Filters an array of "fields" by label or text value
   * @param {Array} fields
@@ -31,7 +33,7 @@ const getFiltersObject = exports.getFiltersObject = (fields) => {
   * @param {Array} items
   * @return {Array}
 **/
-const filterItems = exports.filterItems = (filters, items) => {
+exports.filterItems = (filters, items) => {
   let processedItems = [];
   let filtersObject = getFiltersObject(filters);
 
@@ -74,7 +76,7 @@ const filterItems = exports.filterItems = (filters, items) => {
   * @param {String} requestedFields
   * @return {String}
 **/
-const listFields = exports.listFields = (fieldsObj, requestedFields) => {
+exports.listFields = (fieldsObj, requestedFields) => {
   const requestedFieldsArray = requestedFields.split(',');
   let output = '';
 
@@ -84,7 +86,7 @@ const listFields = exports.listFields = (fieldsObj, requestedFields) => {
   // output += `*Item:* ${itemTitle}\n`;
   requestedFieldsArrayLower.forEach((field) => {
 
-    let isFieldInArray = fieldsObj[field] !== undefined ;
+    let isFieldInArray = typeof fieldsObj[field] !== "undefined" ;
     output += `• *${capitalizeFirstLetter(field)}:* `;
 
     if (isFieldInArray) {
@@ -132,14 +134,13 @@ const processField = exports.processField = (field) => {
   return output;
 }
 /**
-  * Receives a field of type array and returns the info in this field as a string 
+  * Receives a field of type array and returns the info in this field as a string
   * @param {Array} arrayField
   * @return {String}
 **/
 const processArrayField = exports.processArrayField = (arrayField) => {
   let output = '';
   arrayField.forEach((element) => {
-    console.log(element);
     output += processObjectField(element);
   });
   return output;
@@ -152,13 +153,10 @@ const processArrayField = exports.processArrayField = (arrayField) => {
 const processObjectField = exports.processObjectField = (objectField) => {
   let output = '';
   if (objectField.hasOwnProperty('text')) {
-    console.log(`Text Property: ${objectField.text}`);
     output += processStringField(objectField.text);
   } else if (objectField.hasOwnProperty('start_date')) {
-    console.log(`Start_Date: ${objectField.start_date}`);
     output += processStringField(objectField.start_date);
   } else if (objectField.hasOwnProperty('name')) {
-    console.log(`Name Property: ${objectField.name}`);
     output += `${processStringField(objectField.name)} - ${processStringField(objectField.mail)}`;
   } else {
     output += 'n/a';
@@ -176,7 +174,7 @@ const processStringField = exports.processStringField = (stringField) => stringF
   * @param {Object} fieldsObj
   * @return {String}
 **/
-const listAllFields = exports.listAllFields = (fieldsObj) => {
+exports.listAllFields = (fieldsObj) => {
   let output = '';
   for(var key in fieldsObj) {
     if (fieldIsNotHidden(key)) {
@@ -190,14 +188,14 @@ const listAllFields = exports.listAllFields = (fieldsObj) => {
   * @param {Object} item
   * @return {Number}
 **/
-const getItemID = exports.getItemID = (item) => item.item_id;
+exports.getItemID = (item) => item.item_id;
 /**
   * Retrieves the field ID for an item by field name.
   * @param {Object} item
   * @param {String} name
   * @return {Number}
 **/
-const getFieldID = exports.getFieldID = (item, name) => {
+exports.getFieldID = (item, name) => {
   return filterFields(item.fields, name).field_id;
 }
 /**
@@ -206,14 +204,14 @@ const getFieldID = exports.getFieldID = (item, name) => {
   * @param {String} name
   * @return {Number}
 **/
-const getFieldValueID = exports.getFieldValueID = (options, value) => {
+exports.getFieldValueID = (options, value) => {
   return filterFields(options, value).id;
 }
 /**
   * Provides useful information for the user.
   * @return {String}
 **/
-const showHelp = exports.showHelp = () => {
+exports.showHelp = () => {
   return `*SlacknPodio Usage:*
 
   Allows team members to interact with data from Podio by using commands within a Slack channel.
@@ -226,18 +224,19 @@ const showHelp = exports.showHelp = () => {
   `;
 
 }
+
 /**
   * Retrieves the link for the item.
   * @param {Object} item
   * @return {String}
 **/
-const getURL = exports.getURL = (item) => item.link;
+exports.getURL = (item) => item.link;
 /**
   * Validates the type of response and returns the right value.
   * @param {Object} value
   * @return {Number || String}
 **/
-const checkValue = exports.checkValue = (value) => {
+exports.checkValue = (value) => {
   return parseInt(value, 10) || value.text || (typeof value === 'object' ?
     stringVal(value) :
     value);
@@ -248,7 +247,7 @@ const checkValue = exports.checkValue = (value) => {
   * @param {String} input
   * @return {String} output
 **/
-const listFiles = exports.listFiles = (input) => {
+exports.listFiles = (input) => {
   let output = '';
   input.forEach((file) => {
     output+= `*File:* ${file.name}, *size:* ${file.size? file.size + ' kb': file.size}, *link:* ${file.link}\n`;
@@ -261,7 +260,7 @@ const listFiles = exports.listFiles = (input) => {
   * @param {Object} input
   * @return {String} output
 **/
-const listItems = exports.listItems = (input) => {
+exports.listItems = (input) => {
   let output = '';
   let itemsObject = input;
   let itemsCount = Object.keys(itemsObject).length;
@@ -274,7 +273,7 @@ const listItems = exports.listItems = (input) => {
   } else {
     output = `*No items were found*`;
   }
-  
+
   return output;
 }
 /**
@@ -283,7 +282,7 @@ const listItems = exports.listItems = (input) => {
   * @param {String} input
   * @return {Boolean}
 **/
-const isTrue = exports.isTrue = (input) => {
+exports.isTrue = (input) => {
   if (typeof(input) === 'string') {
     input = stringSanitizing(input);
   }
@@ -333,7 +332,7 @@ const fieldIsNotHidden = exports.fieldIsNotHidden = (fieldName) => {
   return !(process.env.ignoreFields.indexOf(fieldName) > -1);
 }
 /**
-  * Takes user input and returns sanitized 
+  * Takes user input and returns sanitized
   * @param {Object} input
   * @return {String}
 **/
