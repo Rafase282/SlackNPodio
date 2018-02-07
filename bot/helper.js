@@ -224,6 +224,7 @@ exports.showHelp = () => {
   `;
 
 }
+
 /**
   * Retrieves the link for the item.
   * @param {Object} item
