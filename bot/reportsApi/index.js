@@ -1,10 +1,10 @@
 let api = require('./apiWrapper').api;
-let { BASE_URL } = require('./config');
+let {BASE_URL} = require('./config');
 
 /**
-  * Get List of Report Suites
-  * @return {Object}
-**/
+ * Get List of Report Suites
+ * @return {Object}
+ **/
 exports.getReportSuites = async () => {
   try {
     let url = BASE_URL + '?method=Company.GetReportSuites';
@@ -14,16 +14,16 @@ exports.getReportSuites = async () => {
     });
     return response;
   } catch (error) {
-    console.log('error==', error);
+    throw new Error(error);
   }
 };
 
 /**
-  * Get Report Data
-  * @param {String} Report ID
-  * @return {Object}
-**/
-exports.getReport = async reportID => {
+ * Get Report Data
+ * @param {String} Report ID
+ * @return {Object}
+ **/
+exports.getReport = async (reportID) => {
   try {
     let url = BASE_URL + '?method=Report.Get';
     let response = await api(url, 'POST', {
@@ -31,16 +31,16 @@ exports.getReport = async reportID => {
     });
     return response;
   } catch (error) {
-    console.log('error==', error);
+    throw new Error(error);
   }
 };
 
 /**
-  * Put Report in Queue to generate
-  * @param {String} Report Suite ID
-  * @param {Array} metrics
-  * @return {Object}
-**/
+ * Put Report in Queue to generate
+ * @param {String} Report Suite ID
+ * @param {Array} metrics
+ * @return {Object}
+ **/
 exports.queueReport = async (reportSuiteID, metrics) => {
   try {
     let url = BASE_URL + '?method=Report.Queue';
@@ -52,16 +52,16 @@ exports.queueReport = async (reportSuiteID, metrics) => {
     });
     return response;
   } catch (error) {
-    console.log('error==', error);
+    throw new Error(error);
   }
 };
 
 /**
-  * Get Status of Report
-  * @param {String} Report ID
-  * @return {Object}
-**/
-exports.getReportStatus = async reportID => {
+ * Get Status of Report
+ * @param {String} Report ID
+ * @return {Object}
+ **/
+exports.getReportStatus = async (reportID) => {
   try {
     let url = BASE_URL + '?method=Report.Get';
     let response = await api(url, 'POST', {
@@ -69,6 +69,6 @@ exports.getReportStatus = async reportID => {
     });
     return response;
   } catch (error) {
-    console.log('error==', error);
+    throw new Error(error);
   }
 };

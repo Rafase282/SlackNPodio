@@ -10,15 +10,21 @@ exports.builder = (yargs) => {
 };
 exports.desc = 'Retrieve Report';
 exports.handler = async (argv) => {
-  const reportSuiteID = argv.id;
-  const metrics = argv.metric.map((v, i) => ({id: v}));
-  bot.cb(`We got your report generation request. We have queued your report.`);
-  let res = await queueReport(reportSuiteID, metrics);
-  bot.cb(
-    `Your report ${
-      res.reportID
-    } will be generated soon.\n You can get your report status using \`get-status --id ${
-      res.reportID
-    }\``
-  );
+  try {
+    const reportSuiteID = argv.id;
+    const metrics = argv.metric.map((v, i) => ({id: v}));
+    bot.cb(
+      `We got your report generation request. We have queued your report.`
+    );
+    let res = await queueReport(reportSuiteID, metrics);
+    bot.cb(
+      `Your report ${
+        res.reportID
+      } will be generated soon.\n You can get your report status using \`get-status --id ${
+        res.reportID
+      }\``
+    );
+  } catch (err) {
+    bot.cb(`Something went wrong ${err.toString()}.`);
+  }
 };
