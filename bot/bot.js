@@ -7,12 +7,17 @@ const helper = require('./helper');
 const yargs = require('yargs');
 const app = {podio, helper};
 
-const parser = exports.parser = yargs
+const parser = (exports.parser = yargs
   .usage(app.helper.showHelp())
-  .help('help').alias('help', 'h').describe('h','Shows this information.')
-  .version().alias('version', 'V').describe('V','Shows Bot version.')
+  .help('help')
+  .alias('help', 'h')
+  .describe('h', 'Shows this information.')
+  .version()
+  .alias('version', 'V')
+  .describe('V', 'Shows Bot version.')
   .showHelpOnFail(false, 'Specify --help for available options.')
   .commandDir('cmds')
+  .commandDir('reportCmds'));
 
 /**
  * Main logic for the bot.
@@ -22,13 +27,13 @@ const parser = exports.parser = yargs
  * @param {String} input
  * @param {Function} cb
  * @return {String} cb(res)
-**/
+ **/
 exports.logic = (input, cb) => {
   exports.cb = cb;
   if (app.podio.podioAuthenticated) {
     parser.parse(input, (err, argv, output) => {
       if (output) return cb(output);
       if (err) return cb(err);
-    })
+    });
   }
-}
+};
