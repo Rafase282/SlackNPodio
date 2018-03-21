@@ -18,7 +18,10 @@
     "type": "git",
     "url": "git+https://github.com/Rafase282/SlackNPodio.git"
   },
-  "author": "Rafael Rodriguez",
+  "author": "Rafael Rodriguez <rafase282@gmail.com> (https://rafase282.github.io)",
+  "contributors": [
+    "Louis Girifalco, Sarju Hansaliya, Sergio Cabral"
+  ],
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/Rafase282/SlackNPodio/issues"
