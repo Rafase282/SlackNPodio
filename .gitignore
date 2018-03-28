@@ -37,4 +37,3 @@ node_modules
 *.db
 *.patch
 *-lock.json
-.DS_Store
