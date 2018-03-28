@@ -31,9 +31,6 @@
     "@slack/client": "^3.10.0",
     "dotenv": "^4.0.0",
     "podio-js": "^1.6.0",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.2",
-    "wsse": "^2.4.0",
     "yargs": "^8.0.2"
   },
   "devDependencies": {
