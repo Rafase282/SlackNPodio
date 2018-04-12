@@ -5,7 +5,7 @@
 const podio = require('./podio');
 const helper = require('./helper');
 const yargs = require('yargs');
-const app = {podio, helper};
+const app = { podio, helper };
 
 const parser = (exports.parser = yargs
   .usage(app.helper.showHelp())
@@ -16,8 +16,7 @@ const parser = (exports.parser = yargs
   .alias('version', 'V')
   .describe('V', 'Shows Bot version.')
   .showHelpOnFail(false, 'Specify --help for available options.')
-  .commandDir('cmds')
-  .commandDir('reportCmds'));
+  .commandDir('cmds'));
 
 /**
  * Main logic for the bot.

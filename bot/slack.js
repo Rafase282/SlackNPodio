@@ -31,7 +31,7 @@ slack.on(CLIENT_EVENTS.RTM.AUTHENTICATED, () => {
  * You need to wait for the client to fully connect before you can send messages.
  **/
 slack.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
-  slack.sendMessage(`Hello! Just letting you know that I'm here if you need anything.`, process.env.SLACK_CHANNEL_ID);
+  // slack.sendMessage(`Hello! Just letting you know that I'm here if you need anything.`, process.env.SLACK_CHANNEL_ID);
 });
 /**
  * Event handler for when a messaged is posted on the slack channel.

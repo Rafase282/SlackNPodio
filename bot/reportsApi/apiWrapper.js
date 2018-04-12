@@ -2,12 +2,12 @@ let wsse = require('wsse');
 let request = require('request-promise');
 
 /**
-  * Api wrapper
-  * @param {String} url
-  * @param {String} method
-  * @param {Object} data
-  * @return {Object}
-**/
+ * Api wrapper
+ * @param {String} url
+ * @param {String} method
+ * @param {Object} data
+ * @return {Object}
+ **/
 exports.api = async (url, method = 'GET', data) => {
   let token = wsse({
     username: process.env.ADOBE_USERNAME,
@@ -28,6 +28,6 @@ exports.api = async (url, method = 'GET', data) => {
     let response = await request(options);
     return response;
   } catch (error) {
-    console.log('error==', error);
+    throw error;
   }
 };
