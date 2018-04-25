@@ -5,8 +5,14 @@
   "main": "bot/slack.js",
   "scripts": {
     "test": "clear && mocha test/test-bot.js || true",
-    "start": "clear && node bot/slack.js",
+    "start": "clear && npm run build && node build/index.js",
+    "dev": "clear && nodemon --exec babel-node bot/index.js",
+    "build": "rimraf build && babel -d build bot",
     "lint": "clear && eslint . || true"
+  },
+  "engines": {
+    "node": "^8.9.3",
+    "npm": "^5.5.1"
   },
   "keywords": [
     "Podio",
@@ -29,11 +35,22 @@
   "homepage": "https://github.com/Rafase282/SlackNPodio#readme",
   "dependencies": {
     "@slack/client": "^3.10.0",
+    "body-parser": "^1.18.2",
     "dotenv": "^4.0.0",
+    "express": "^4.16.3",
     "podio-js": "^1.6.0",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "rimraf": "^2.6.2",
+    "wsse": "^2.4.0",
     "yargs": "^8.0.2"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-syntax-async-functions": "^6.13.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
     "eslint": "^4.3.0",
     "eslint-config-google": "^0.9.1",
     "eslint-config-standard": "^10.2.1",
@@ -42,7 +59,8 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "expect": "^1.20.2",
-    "mocha": "^3.4.2"
+    "mocha": "^3.4.2",
+    "nodemon": "^1.17.2"
   },
   "yargs": {
     "short-option-groups": true,

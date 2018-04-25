@@ -1,7 +1,7 @@
 'use strict';
 
-const podio = require('../podio');
-const bot = require('../bot');
+const podio = require('../../api');
+const bot = require('../../../../bot');
 
 exports.command = 'files-link <types> <limit> <sorts> <offset> <bool>'
 exports.aliases = ['files', 'docs', 'F']

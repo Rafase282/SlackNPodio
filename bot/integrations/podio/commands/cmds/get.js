@@ -1,7 +1,7 @@
 'use strict';
 
-const podio = require('../podio');
-const bot = require('../bot');
+const podio = require('../../api');
+const bot = require('../../../../bot');
 
 exports.command = 'get-field <item> <field>'
 exports.aliases = ['get', 'G', 'retrieve']

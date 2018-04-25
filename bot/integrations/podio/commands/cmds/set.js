@@ -1,7 +1,7 @@
 'use strict';
 
-const podio = require('../podio');
-const bot = require('../bot');
+const podio = require('../../api');
+const bot = require('../../../../bot');
 
 exports.command = 'update-value <item> <field> <value>'
 exports.aliases = ['set', 'S']

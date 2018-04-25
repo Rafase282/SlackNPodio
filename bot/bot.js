@@ -2,17 +2,24 @@
 
 'use strict';
 
-const podio = require('./podio');
-const helper = require('./helper');
 const yargs = require('yargs');
-const app = {podio, helper};
+import fs from 'fs';
+import path from 'path';
 
-const parser = exports.parser = yargs
-  .usage(app.helper.showHelp())
-  .help('help').alias('help', 'h').describe('h','Shows this information.')
-  .version().alias('version', 'V').describe('V','Shows Bot version.')
-  .showHelpOnFail(false, 'Specify --help for available options.')
-  .commandDir('cmds')
+let parser = yargs
+  .help('help')
+  .alias('help', 'h')
+  .describe('h', 'Shows this information.')
+  .version()
+  .alias('version', 'V')
+  .describe('V', 'Shows Bot version.')
+  .showHelpOnFail(false, 'Specify --help for available options.');
+
+fs.readdirSync(path.resolve(__dirname, './integrations')).forEach((dir) => {
+  parser.commandDir(path.resolve(__dirname, `./integrations/${dir}/commands`));
+});
+
+export {parser};
 
 /**
  * Main logic for the bot.
@@ -22,13 +29,11 @@ const parser = exports.parser = yargs
  * @param {String} input
  * @param {Function} cb
  * @return {String} cb(res)
-**/
-exports.logic = (input, cb) => {
+ **/
+exports.logic = (type, input, cb) => {
   exports.cb = cb;
-  if (app.podio.podioAuthenticated) {
-    parser.parse(input, (err, argv, output) => {
-      if (output) return cb(output);
-      if (err) return cb(err);
-    })
-  }
-}
+  parser.parse(`${type} ${input}`, (err, argv, output) => {
+    if (output) return cb(output);
+    if (err) return cb(err);
+  });
+};

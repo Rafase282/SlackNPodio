@@ -13,7 +13,7 @@ Even team members without a Podio account now have the ability to interact with 
 1. Download and run `npm install`
 2. Rename `sample.env` to `.env`
 3. Fill out the `.env` file with the right credentials.
-4. Run with `npm start`
+4. Run with `npm start` for production and Run `npm run dev` for development.
 
 ## App Structure:
 
