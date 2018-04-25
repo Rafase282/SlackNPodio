@@ -30,8 +30,6 @@ app.post('/slack-command', async (req, res) => {
     json: true
   };
 
-  console.log("===", req.body);
-
   try {
     // First check whether request is coming from our team_id and verified_token
     if (
