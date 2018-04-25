@@ -1,24 +1,19 @@
+require('dotenv').config({silent: true});
 import express from 'express';
 import bodyParser from 'body-parser';
 import httpReq from 'request-promise';
-import * as COMMANDS from './config/commands';
-import {
-  parseReportSuitesCommand,
-  parseGenerateReportCommand,
-  parseReportStatusCommand
-} from './reportsApi';
-import './slack';
+import {logic} from './bot';
 
 const app = express();
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/', (req, res) => {
   res.send('Slack Server Started');
 });
 
 app.post('/slack-command', async (req, res) => {
-  const { token, team_id, command, response_url } = req.body;
+  const {token, team_id, command, response_url} = req.body;
   // We send the empty response first always and then we process the command
   // Why ? Because if we dont send the empty response and our command took
   // more time to execute then slack will think command failed. So once we execute
@@ -41,31 +36,17 @@ app.post('/slack-command', async (req, res) => {
       token === process.env.SLACK_VERIFICATION_TOKEN &&
       team_id === process.env.SLACK_TEAM_ID
     ) {
-      switch (command) {
-        // Report Suite Command
-        case COMMANDS.REPORT_SUITES: {
-          const body = await parseReportSuitesCommand();
-          httpReq({ ...responseOptions, body });
-          break;
-        }
-        case COMMANDS.GENERATE_REPORT: {
-          const { text } = req.body;
-          const body = await parseGenerateReportCommand(text);
-          httpReq({ ...responseOptions, body });
-          break;
-        }
-        case COMMANDS.REPORT_STATUS: {
-          const { text } = req.body;
-          const body = await parseReportStatusCommand(text);
-          httpReq({ ...responseOptions, body });
-          break;
-        }
-        default: {
-          res.json({
-            text: 'Not able to find the command. Please try again.'
+      logic('analytics', req.body.text, (text) => {
+        if (text) {
+          httpReq({
+            ...responseOptions,
+            body: {
+              response_type: 'in_channel',
+              text
+            }
           });
         }
-      }
+      });
     } else {
       responseOptions.body = {
         response_type: 'in_channel',

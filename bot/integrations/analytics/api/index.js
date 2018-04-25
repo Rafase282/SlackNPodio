@@ -5,7 +5,7 @@ let { BASE_URL } = require('./config');
  * Get List of Report Suites
  * @return {Object}
  **/
-const getReportSuites = async () => {
+export const getReportSuites = async () => {
   try {
     let url = BASE_URL + '?method=Company.GetReportSuites';
     let response = await api(url, 'POST', {
@@ -23,7 +23,7 @@ const getReportSuites = async () => {
  * @param {String} Report ID
  * @return {Object}
  **/
-const getReport = async reportID => {
+export const getReport = async reportID => {
   try {
     let url = BASE_URL + '?method=Report.Get';
     let response = await api(url, 'POST', {
@@ -41,7 +41,7 @@ const getReport = async reportID => {
  * @param {Array} metrics
  * @return {Object}
  **/
-const queueReport = async (reportSuiteID, metrics) => {
+export const queueReport = async (reportSuiteID, metrics) => {
   try {
     let url = BASE_URL + '?method=Report.Queue';
     let response = await api(url, 'POST', {
@@ -61,7 +61,7 @@ const queueReport = async (reportSuiteID, metrics) => {
  * @param {String} Report ID
  * @return {Object}
  **/
-const getReportStatus = async reportID => {
+export const getReportStatus = async reportID => {
   try {
     let url = BASE_URL + '?method=Report.Get';
     let response = await api(url, 'POST', {

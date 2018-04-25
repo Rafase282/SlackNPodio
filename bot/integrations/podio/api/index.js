@@ -4,7 +4,7 @@
 
 const Podio = require('podio-js').api;
 const helper = require('./helper');
-const bot = require('./bot');
+const bot = require('../../../bot');
 require('dotenv').config({silent: true});
 const podio = new Podio({
   authType: 'app',

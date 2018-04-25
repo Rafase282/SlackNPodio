@@ -1,5 +1,5 @@
-let queueReport = require('../reportsApi/index').queueReport;
-const bot = require('../bot');
+let queueReport = require('../api/index').queueReport;
+const bot = require('../../../bot');
 
 exports.command = 'retrieve [id] [metric]';
 exports.aliases = ['rt'];

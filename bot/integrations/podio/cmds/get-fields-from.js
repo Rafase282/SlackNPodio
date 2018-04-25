@@ -1,7 +1,7 @@
 'use strict';
 
-const podio = require('../podio');
-const bot = require('../bot');
+const podio = require('../api');
+const bot = require('../../../bot');
 
 exports.command = 'get-fields-from <query> <fields>'
 exports.aliases = ['gff']
