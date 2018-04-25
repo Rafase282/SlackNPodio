@@ -30,13 +30,15 @@ app.post('/slack-command', async (req, res) => {
     json: true
   };
 
+  console.log("===", req.body);
+
   try {
     // First check whether request is coming from our team_id and verified_token
     if (
       token === process.env.SLACK_VERIFICATION_TOKEN &&
       team_id === process.env.SLACK_TEAM_ID
     ) {
-      logic('analytics', req.body.text, (text) => {
+      logic(command.substr(1), req.body.text, (text) => {
         if (text) {
           httpReq({
             ...responseOptions,

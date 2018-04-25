@@ -1,5 +1,5 @@
-let getReportSuites = require('../api/index').getReportSuites;
-const bot = require('../../../bot');
+let getReportSuites = require('../../api/index').getReportSuites;
+const bot = require('../../../../bot');
 
 exports.command = 'report-suites';
 exports.aliases = ['rs'];

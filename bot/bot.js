@@ -16,7 +16,7 @@ let parser = yargs
   .showHelpOnFail(false, 'Specify --help for available options.');
 
 fs.readdirSync(path.resolve(__dirname, './integrations')).forEach((dir) => {
-  parser.commandDir(path.resolve(__dirname, `./integrations/${dir}/cmds`));
+  parser.commandDir(path.resolve(__dirname, `./integrations/${dir}/commands`));
 });
 
 export {parser};
@@ -32,7 +32,7 @@ export {parser};
  **/
 exports.logic = (type, input, cb) => {
   exports.cb = cb;
-  parser.parse(input, (err, argv, output) => {
+  parser.parse(`${type} ${input}`, (err, argv, output) => {
     if (output) return cb(output);
     if (err) return cb(err);
   });

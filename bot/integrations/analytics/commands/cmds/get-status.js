@@ -1,5 +1,5 @@
-let getReportStatus = require('../api/index').getReportStatus;
-const bot = require('../../../bot');
+let getReportStatus = require('../../api/index').getReportStatus;
+const bot = require('../../../../bot');
 
 exports.command = 'get-status [id]';
 exports.aliases = ['gs'];
