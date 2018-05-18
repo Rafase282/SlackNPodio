@@ -270,9 +270,7 @@ module.exports = {
                 }
               ],
               "multiple": true,
-              "referenceable_types": [
-                18085293
-              ]
+              "referenceable_types": [18085293]
             },
             "mapping": null,
             "label": "Relationship"

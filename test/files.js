@@ -3,9 +3,7 @@ module.exports = [
     "mimetype": "application/pdf",
     "perma_link": null,
     "hosted_by": "podio",
-    "replaces": [
-
-    ],
+    "replaces": [],
     "description": null,
     "hosted_by_humanized_name": "Podio",
     "thumbnail_link": null,
@@ -169,9 +167,7 @@ module.exports = [
     "mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "perma_link": null,
     "hosted_by": "podio",
-    "replaces": [
-
-    ],
+    "replaces": [],
     "description": null,
     "hosted_by_humanized_name": "Podio",
     "thumbnail_link": null,
@@ -335,9 +331,7 @@ module.exports = [
     "mimetype": "image/gif",
     "perma_link": null,
     "hosted_by": "boxnet",
-    "replaces": [
-
-    ],
+    "replaces": [],
     "description": null,
     "hosted_by_humanized_name": "Box",
     "thumbnail_link": null,
