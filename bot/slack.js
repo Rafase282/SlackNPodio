@@ -1,51 +1,57 @@
 'use strict';
 
-const RtmClient = require('@slack/client').RtmClient;
-const CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
-const RTM_EVENTS = require('@slack/client').RTM_EVENTS;
-require('dotenv').config({silent: true});
-const slack = new RtmClient(process.env.botToken);
+require('dotenv').config();
+const {
+    RTMClient,
+    WebClient
+} = require('@slack/client');
+const slackToken = process.env.botToken;
+// The client is initialized and then started to get an active connection to the platform
+const slack = new RTMClient(slackToken);
+slack.start();
+
+// Need a web client to find a channel where the app can post a message
+const web = new WebClient(slackToken);
+
 const podio = require('./podio');
 const helper = require('./helper');
 const bot = require('./bot');
-const app = {podio, helper, bot};
-/**
- * Event handler for when the bot is authenticated with Podio
- * The client will emit an RTM.AUTHENTICATED event on successful connection,
- * with the `slack.start` payload if you want to cache it.
- * @param {Stream} rtmStartData
- * @return {Log}
- **/
-slack.on(CLIENT_EVENTS.RTM.AUTHENTICATED, () => {
-  //console.log(`Slack API: Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}, but not yet connected to a channel.`);
-  app.podio.authenticatePodio(() => {
-    app.podio.podioAuthenticated = true;
-  }, () => {
-    app.podio.podioAuthenticated = false;
-    //console.log('Podio API:', err);
-  });
-});
+const app = {
+    podio,
+    helper,
+    bot
+};
+let channel = null
+    // Load the current channels list asynchrously
+web.channels.list()
+    .then((res) => {
+        // Take any channel for which the bot is a member
+        channel = res.channels.find((chan) => chan.is_member);
 
-/**
- * Event handler for when the bot connects to slack.
- * You need to wait for the client to fully connect before you can send messages.
- **/
-slack.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
-  slack.sendMessage(`Hello! Just letting you know that I'm here if you need anything.`, 'C46S9UAN5');
-});
-/**
- * Event handler for when a messaged is posted on the slack channel.
- * It call the bot to handle the input and run the propect action.
- * Then gets the message to show on the channel.
- * @param {Object} message
- * @return {String}
- **/
-slack.on(RTM_EVENTS.MESSAGE, (message) => {
-  app.bot.logic(message.text, (msg) => {
-    if (msg) {
-      slack.sendMessage(msg, message.channel);
+        if (channel) {
+            // We now have a channel ID to post a message in!
+            // use the `sendMessage()` method to send a simple string to a channel using the channel ID
+            slack.sendMessage("Hello there! Just letting you know that I'm here if you need anything.", channel.id);
+        } else {
+            //console.log('This bot does not belong to any channel, invite it to at least one and try again');
+        }
+    });
+
+// On successful connection authenticate podio
+slack.on('message', (message) => {
+    // Skip messages that are from a bot or my own user ID
+    if (!message.subtype ||
+        (!message.subtype && message.user !== slack.activeUserId)) {
+        app.podio.authenticatePodio(() => {
+            app.podio.podioAuthenticated = true;
+            app.bot.logic(message.text, (msg) => {
+                if (msg) {
+                    slack.sendMessage(msg, channel.id);
+                }
+            });
+        }, () => {
+            app.podio.podioAuthenticated = false;
+        });
+
     }
-  });
 });
-
-slack.start();

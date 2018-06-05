@@ -37,3 +37,4 @@ node_modules
 *.db
 *.patch
 *-lock.json
+.glitch-assets
