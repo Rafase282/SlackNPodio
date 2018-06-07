@@ -66,6 +66,7 @@ exports.getPodioItemsByFilters = (filters) => {
         return podio.request('POST', `/item/app/${process.env.appID}/filter/`, filter)
             .then((res) => {
                 let filteredItems = app.helper.filterItems(filters, res.items);
+                console.log(filteredItems);
                 return app.helper.listItems(filteredItems);
             })
             .catch((err) => `${err}`);
@@ -76,16 +77,27 @@ exports.getPodioItemsByFilters = (filters) => {
  * @return {Object}
  **/
 exports.showAllFields = (query) => {
-        return getPodioItem(query)
-            .then((res) => {
-                let output = `*Item:* ${res.title}\n*Link:* ${res.link}\n\n`;
-                return getPodioItemValues(res.item_id).then((res) => {
-                        return output += app.helper.listAllFields(res);
-                    })
-                    .catch((err) => `${err}`);
+          return getPodioItems(query, 50, 'title', true, true, 0, 'item')
+            .then((t_res) =>  {
+              let itemsCount = Object.keys(t_res.results).length;
+              if(itemsCount>1){
+                return `Multiple items match this keyword, please refine search to be more unique.`;
+              }else{
+                return getPodioItem(t_res.results[0].title)
+                        .then((res) => {
+                            let output = `*Item:* ${res.title}\n*Link:* ${res.link}\n\n`;
+                            return getPodioItemValues(res.item_id).then((res) => {
+                                    return output += app.helper.listAllFields(res);
+                                })
+                                .catch((err) => `${err}`);
+                        })
+                        .catch(() => {
+                            return `I'm sorry, I couldn't find an item by that *title*, please make sure you have the *exact* item title.`;
+                        });
+              }
             })
             .catch(() => {
-                return `I'm sorry, I couldn't find an item by that *title*, please make sure you have the *exact* item title, put the title between quote marks and try again.`;
+              return `an error occured`;
             });
     }
 /**
