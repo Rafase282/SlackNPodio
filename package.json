@@ -1,6 +1,6 @@
 {
   "name": "slacknpodio",
-  "version": "4.0.0",
+  "version": "3.5.1",
   "description": "Creates a bot that listens fo commands and is capable of retrieving and updating information to/from podio via slack.",
   "main": "bot/slack.js",
   "scripts": {
