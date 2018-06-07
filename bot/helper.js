@@ -208,7 +208,14 @@ exports.showHelp = () => {
 
   *Synopsis*
 
-    \`@podio [options]\`
+    \`command [options]\`
+
+*Commands*
+
+  \`search <keyword>\` will search all tests and return Title - URL which include keyword
+  \`show <unique keyword>\` will show details for a test (must be specific to one test)
+  \`queue\` will show all tests currently in sprint
+  \`live\` will show all tests currently live
   `;
 
 }

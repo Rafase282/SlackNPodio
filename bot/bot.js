@@ -9,7 +9,7 @@ const app = {podio, helper};
 
 const parser = exports.parser = yargs
     .usage(app.helper.showHelp())
-    .help('help').alias('help', 'h').describe('h', 'Shows this information.')
+    .help(false)
     .version().alias('version', 'V').describe('V', 'Shows Bot version.')
     .showHelpOnFail(false, 'Specify --help for available options.')
     .commandDir('cmds')

@@ -9,6 +9,5 @@ exports.handler = (argv) => {
   arr.shift();
   arr.splice(0, 0, argv.query);
   arr = arr.toString().replace(/,/g, " ").replace(/[\u2018\u2019]/g, "").replace(/[\u201C\u201D]/g, '');
-  console.log(arr)
   podio.permissionCheck(podio.READ, podio.showAllFields, [arr]);
 }
