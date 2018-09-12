@@ -51,10 +51,11 @@ const getPodioItem = exports.getPodioItem = (name) => {
  * @param {String} filters
  * @return {Object}
  **/
-exports.getPodioItemsByFilters = (filters) => {
+var all_items = [];
+const getPodioItemsByFilters = exports.getPodioItemsByFilters = (filters) => {
         const filter = {
             "sort_by": 'title',
-            "sort_desc": true,
+            "sort_desc": false,
             "state": 'active',
             "limit": 500,
             "offset": 0,
@@ -65,12 +66,38 @@ exports.getPodioItemsByFilters = (filters) => {
 
         return podio.request('POST', `/item/app/${process.env.appID}/filter/`, filter)
             .then((res) => {
-                let filteredItems = app.helper.filterItems(filters, res.items);
-                console.log(filteredItems);
-                return app.helper.listItems(filteredItems);
+                all_items = res.items;
+                if(res.items.length==500){    
+                    getMorePodioItems(all_items,500,filters);                      
+                }else{
+                    let filteredItems = app.helper.filterItems(filters, all_items);
+                    return app.helper.listItems(filteredItems);
+                }   
             })
             .catch((err) => `${err}`);
     }
+const getMorePodioItems = (all_items,offset,filters) => {
+    const filter = {
+        "sort_by": 'title',
+        "sort_desc": false,
+        "state": 'active',
+        "limit": 500,
+        "offset": offset,
+        "remember": false
+    }
+    return podio.request('POST', `/item/app/${process.env.appID}/filter/`, filter)
+        .then((res) => {
+            all_items = all_items.concat(res.items);
+            if(res.items.length==500){
+                let next = offset + 500;
+                getMorePodioItems(all_items,next,filters);   
+            }else{
+                let filteredItems = app.helper.filterItems(filters, all_items);
+                let x = app.helper.listItems(filteredItems);
+                bot.cb(x);
+            }
+        }); 
+}
 /**
  * Returns an object with all the info related to the Podio Item identify by the ID provided
  * @param {Number} itemId
@@ -130,7 +157,7 @@ const getPodioItems = exports.getPodioItems = (query = 'name', limit = 50, searc
  * @return {String}
  **/
 exports.getItemsList = (name) => {
-        return getPodioItems(name, 50, 'title', true, true, 0, 'item').then((res) => app.helper.listItems(res.results));
+        return getPodioItems(name, 50, 'title', true, true, 0, 'item').then((res) => app.helper.listItems(res.results, false));
     }
 /**
  * Returns a list of requested fields for the specified Item
@@ -255,4 +282,4 @@ podio.request('get', '/item/status').then((responseBody) => {
         .catch(() => {
             // There was an error establishing the connection...
         });
-});
+}); 
