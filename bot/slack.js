@@ -32,6 +32,7 @@ web.channels.list()
             // We now have a channel ID to post a message in!
             // use the `sendMessage()` method to send a simple string to a channel using the channel ID
             slack.sendMessage("Hello there! Just letting you know that I'm here if you need anything.", channel.id);
+          //slack.sendMessage("Hello there! Just letting you know that I'm here if you need anything.", 'GB217DNRG');
         } else {
             //console.log('This bot does not belong to any channel, invite it to at least one and try again');
         }
@@ -47,11 +48,11 @@ slack.on('message', (message) => {
             app.bot.logic(message.text, (msg) => {
                 if (msg) {
                     slack.sendMessage(msg, channel.id);
+                  //slack.sendMessage(msg, 'GB217DNRG');
                 }
             });
         }, () => {
             app.podio.podioAuthenticated = false;
         });
-
     }
 });

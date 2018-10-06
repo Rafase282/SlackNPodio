@@ -70,8 +70,6 @@ exports.listFields = (fieldsObj, requestedFields) => {
 
         // Make all requested fields lowercase to make sure they match the field names in Podio
         let requestedFieldsArrayLower = requestedFieldsArray.map(stringSanitizing);
-
-        // output += `*Item:* ${itemTitle}\n`;
         requestedFieldsArrayLower.forEach((field) => {
 
             let isFieldInArray = typeof fieldsObj[field] !== "undefined";
@@ -85,6 +83,18 @@ exports.listFields = (fieldsObj, requestedFields) => {
         });
 
         return output;
+    }
+
+/**
+ * parse HTML 
+ * @param {String}
+ * @return {String}
+ **/
+const parseHTML = exports.parseHTML = (str) => {
+        str = str.toString();
+        str = str.replace(/<.*?>/g,' '); //remove any text between and including <>
+        str = str.replace(/&nbsp;/g, ' '); //remove nonbreaking space text
+        return str;
     }
 /**
  * Receives a field and returns the field type (Array, Object, or String)
@@ -130,7 +140,9 @@ const processArrayField = exports.processArrayField = (arrayField) => {
         let output = '';
         arrayField.forEach((element) => {
             output += processObjectField(element);
+            output += " | ";
         });
+        output = output.slice(0,-3);
         return output;
     }
 /**
@@ -156,7 +168,16 @@ const processObjectField = exports.processObjectField = (objectField) => {
  * @param {String} stringField
  * @return {String}
  **/
-const processStringField = exports.processStringField = (stringField) => stringField;
+const processStringField = exports.processStringField = (stringField) => {
+    console.log('string is: ' + stringField);
+    console.log('string to string is: ' +stringField.toString());
+    if(stringField == ''){
+        console.log('*****returning N/A**********');
+        return 'N/A';
+    }else{
+        return parseHTML(stringField);        
+    }
+}
 /**
  * Receives an object containing all the fields on an item and returns a list with all the fields and their values
  * @param {Object} fieldsObj
@@ -164,6 +185,8 @@ const processStringField = exports.processStringField = (stringField) => stringF
  **/
 exports.listAllFields = (fieldsObj) => {
         let output = '';
+        fieldsObj = renameKeys(fieldsObj);//must rename before sort
+        fieldsObj = objSort(fieldsObj);
         for (var key in fieldsObj) {
             if (fieldIsNotHidden(key)) {
                 output += `• *${capitalizeFirstLetter(key)}:* ${processField(fieldsObj[key])}\n`;
@@ -216,6 +239,8 @@ exports.showHelp = () => {
   \`show <unique keyword>\` will show details for a test (must be specific to one test)
   \`queue\` will show all tests currently in sprint
   \`live\` will show all tests currently live
+  \`assigned <vertical>\` will show all latest tests assigned to team member
+        accepts: Brett|Minh|Tony|Acquisition|Lifecycle
   `;
 
 }
@@ -248,16 +273,22 @@ exports.listFiles = (input) => {
  * @param {Object} input
  * @return {String} output
  **/
-exports.listItems = (input) => {
+exports.listItems = (input, showVert = true) => {
         let output = '';
         let itemsObject = input;
         let itemsCount = Object.keys(itemsObject).length;
-
+         
         if (itemsCount > 0) {
             output += `I've found ${itemsCount} items matching your query\n\n`;
-            itemsObject.forEach((item) => {
-                output += `• *Item:* ${item.title} *Link:* ${item.link}\n`;
-            });
+            
+            if(showVert){
+                output += verticalOrdered(itemsObject);
+            }else{
+                itemsObject.forEach((item) => {
+                    output += `• *Item:* ${item.title} | *Link:* ${item.link}\n`;
+                });
+            }
+           
         } else {
             output = `*No items were found*`;
         }
@@ -327,4 +358,89 @@ const fieldIsNotHidden = exports.fieldIsNotHidden = (fieldName) => {
 const stringSanitizing = exports.stringSanitizing = (input) => {
     let sanitizedString = toLower(input.trim());
     return sanitizedString;
+}
+/**
+ * rename podio object keys to custom values 
+ * @param {Object} input
+ * @return {Object}
+ **/
+const renameKeys = exports.renameKeys = (obj) => {
+    var customFieldNames = {
+        'customer-type' : 'Customer Type',
+        'category' : 'Site Section',
+        'category-3' : 'Stakeholder',
+        'status-2' : 'status',
+        'category-2' : 'Current Step',
+        'vertical-2' : 'Vertical',
+        'creative-url' : 'Creative URL(s)',
+        'notes-3' : 'Notes',
+        'assigned-to' : 'Assigned-to',
+        'offercontent-flag' : 'Offers And/Or Content',
+        'vertical':'KPI',
+        'qa-links': 'QA Links'};
+
+    for (var key in obj) {
+        if (key in customFieldNames) {
+            Object.defineProperty(obj, customFieldNames[key],
+                Object.getOwnPropertyDescriptor(obj, key));
+            delete obj[key];
+        }
+    }
+    return obj;
+}
+/**
+ * custom sort object - use renamed keys from above renameKeys function
+ * @param {Object} input
+ * @return {Object}
+ **/
+const objSort = exports.objSort = (obj) => {
+    //custom order
+    var orderedObj = {
+        'title':'',
+        'Vertical':'',
+        'division':'',
+        'status':'',
+        'launch-date':'',
+        'Current Step':'',
+        'KPI':'',
+        'platform':'',
+        'Customer Type':'',
+        'Creative URL(s)':'',
+        'QA Links':'',
+        'loe':'',
+        'Offers And/Or Content':'',
+        'Notes':'',
+        'blockers':'',
+        'Assigned-to':''};
+
+    for (var key in obj) {
+            orderedObj[key] = obj[key];
+    }
+    return orderedObj;
+}
+/**
+ * custom order of items by vertical name
+ * @param {Object} input
+ * @return {string} 
+ **/
+const verticalOrdered = exports.verticalOrdered = (obj) => {
+    var itemoutput = '';
+    var orderedObj = {};
+
+    obj.forEach((item) => {
+        var vertical = `${item.fields[1].values[0].value.text}`;
+        if(vertical in orderedObj){
+                orderedObj[vertical].push(`• *Item:* ${item.title} | *Link:* ${item.link}`);
+            }else{
+                orderedObj[vertical] = [`• *Item:* ${item.title} | *Link:* ${item.link}`];
+            }
+        });
+
+    Object.keys(orderedObj).forEach(function(i){ 
+        itemoutput += '\n*Vertical: ' + i + '*\n' ;
+        orderedObj[i].forEach(function(j){
+            itemoutput += j + '\n' ;
+        });
+    })
+    return itemoutput;
 }
