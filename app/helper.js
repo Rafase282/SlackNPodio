@@ -24,7 +24,6 @@ const getFiltersObject = exports.getFiltersObject = (fields) => {
             let tempArray = element.split("=");
             fieldsObj[tempArray[0]] = tempArray[1];
         });
-
         return fieldsObj;
     }
 /**
@@ -34,30 +33,37 @@ const getFiltersObject = exports.getFiltersObject = (fields) => {
  * @return {Array}
  **/
 exports.filterItems = (filters, items) => {
-        let processedItems = [];
-        let filtersObject = getFiltersObject(filters);
-
-        processedItems = items.filter((item) => {
-            let valuesMatchesCount = 0;
-            item.fields.forEach((field) => {
-                //check if the current property is one of the specified ones in the filters list
-                if (filtersObject.hasOwnProperty(field.external_id)) {
-                    //Now let's see if the value matches the one in the filtersObject
-                    field.values.forEach((value) => {
-                        //value could be an object or a string
-                        let type = typeof value.value;
-                        if (type === "object" && stringSanitizing(value.value.text).includes(stringSanitizing(filtersObject[field.external_id]))) {
-                            valuesMatchesCount++;
-                        } else if (type === "string" && stringSanitizing(value.value).includes(stringSanitizing(filtersObject[field.external_id]))) {
+    console.log("filter items", items.length);
+    let processedItems = [];
+    let filtersObject = getFiltersObject(filters);
+    console.log(filtersObject);
+    processedItems = items.filter((item) => {
+        let valuesMatchesCount = 0;
+        item.fields.forEach((field) => {
+            //check if the current property is one of the specified ones in the filters list
+            if (filtersObject.hasOwnProperty(field.external_id)) {
+                //Now let's see if the value matches the one in the filtersObject
+                field.values.forEach((value) => {
+                    //value could be an object or a string
+                    let type = typeof value.value;
+                    if (type === "object") {
+                        if(value.value.text.includes('4')) { console.log(value.value.text); }
+                        if(stringSanitizing(value.value.text).includes(stringSanitizing(filtersObject[field.external_id]))) {
                             valuesMatchesCount++;
                         }
-                    });
-                }
-            });
-            return (valuesMatchesCount === Object.getOwnPropertyNames(filtersObject).length);
+                    } else if (type === "string") {
+                        if(value.value.includes('4')) { console.log(value.value.text); }
+                        if(stringSanitizing(value.value).includes(stringSanitizing(filtersObject[field.external_id]))) {
+                            valuesMatchesCount++;
+                        }
+                    }
+                });
+            }
         });
-        return processedItems;
-    }
+        return (valuesMatchesCount === Object.getOwnPropertyNames(filtersObject).length);
+    });
+    return processedItems;
+}
 /**
  * Receives an object containing all the fields on an item and returns a list with the requested fields
  * @param {Object} fieldsObj
@@ -184,16 +190,17 @@ const processStringField = exports.processStringField = (stringField) => {
  * @return {String}
  **/
 exports.listAllFields = (fieldsObj) => {
-        let output = '';
-        fieldsObj = renameKeys(fieldsObj);//must rename before sort
-        fieldsObj = objSort(fieldsObj);
-        for (var key in fieldsObj) {
-            if (fieldIsNotHidden(key)) {
-                output += `• *${capitalizeFirstLetter(key)}:* ${processField(fieldsObj[key])}\n`;
-            }
+    console.log(fieldsObj);
+    let output = '';
+    fieldsObj = renameKeys(fieldsObj);//must rename before sort
+    fieldsObj = objSort(fieldsObj);
+    for (var key in fieldsObj) {
+        if (fieldIsNotHidden(key)) {
+            output += `• *${capitalizeFirstLetter(key)}:* ${processField(fieldsObj[key])}\n`;
         }
-        return output;
     }
+    return output;
+}
 /**
  * Retrieves the ID for an Item object.
  * @param {Object} item
@@ -274,27 +281,27 @@ exports.listFiles = (input) => {
  * @return {String} output
  **/
 exports.listItems = (input, showVert = true) => {
-        let output = '';
-        let itemsObject = input;
-        let itemsCount = Object.keys(itemsObject).length;
-         
-        if (itemsCount > 0) {
-            output += `I've found ${itemsCount} items matching your query\n\n`;
-            
-            if(showVert){
-                output += verticalOrdered(itemsObject);
-            }else{
-                itemsObject.forEach((item) => {
-                    output += `• *Item:* ${item.title} | *Link:* ${item.link}\n`;
-                });
-            }
-           
-        } else {
-            output = `*No items were found*`;
+    let output = '';
+    let itemsObject = input;
+    let itemsCount = Object.keys(itemsObject).length;
+    console.log("listing items");
+    if (itemsCount > 0) {
+        output += `I've found ${itemsCount} items matching your query\n\n`;
+        
+        if(showVert){
+            output += verticalOrdered(itemsObject);
+        }else{
+            itemsObject.forEach((item) => {
+                output += `• *Item:* ${item.title} | *Link:* ${item.link}\n`;
+            });
         }
-
-        return output;
+        
+    } else {
+        output = `*No items were found*`;
     }
+
+    return output;
+}
 /**
  * Converts a string to a boolean
  * source: http://stackoverflow.com/questions/263965

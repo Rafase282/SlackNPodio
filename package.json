@@ -1,60 +1,31 @@
 {
-  "name": "slacknpodio",
-  "version": "3.5.1",
-  "description": "Creates a bot that listens fo commands and is capable of retrieving and updating information to/from podio via slack.",
-  "main": "bot/slack.js",
+  "name": "slack-podio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "test": "clear && ./node_modules/.bin/mocha test/test-bot.js || true",
-    "start": "clear && node bot/slack.js",
-    "dev": "clear && ./node_modules/.bin/nodemon bot/slack.js",
-    "lint": "clear && ./node_modules/.bin/eslint . || true"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
   },
-  "engines": {
-    "node": "^8.11.2",
-    "npm": "^6.0.1"
-  },
-  "keywords": [
-    "Podio",
-    "Slack",
-    "Rafase282",
-    "Podio-JS"
-  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Rafase282/SlackNPodio.git"
+    "url": "git+https://github.com/tmmdata/Slack-Podio.git"
   },
-  "author": "Rafael J. Rodriguez <rafase282@gmail.com> (https://rafase282.github.io)",
-  "contributors": [
-    "Louis Girifalco, Sarju Hansaliya, Sergio Cabral"
-  ],
-  "license": "GPL-3.0",
+  "author": "",
+  "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Rafase282/SlackNPodio/issues"
+    "url": "https://github.com/tmmdata/Slack-Podio/issues"
   },
-  "homepage": "https://github.com/Rafase282/SlackNPodio#readme",
+  "homepage": "https://github.com/tmmdata/Slack-Podio#readme",
   "dependencies": {
-    "@slack/client": "^4.2.2",
-    "dotenv": "^6.0.0",
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "dotenv": "^6.1.0",
+    "express": "^4.16.3",
     "podio-js": "^1.6.1",
-    "yargs": "^11.1.0"
+    "winston": "^3.1.0"
   },
   "devDependencies": {
-    "eslint": "^4.19.1",
-    "eslint-config-google": "^0.9.1",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.12.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
-    "expect": "^23.1.0",
-    "mocha": "^5.2.0",
-    "nodemon": "^1.17.5"
-  },
-  "yargs": {
-    "short-option-groups": true,
-    "camel-case-expansion": true,
-    "dot-notation": true,
-    "parse-numbers": true,
-    "boolean-negation": true
+    "nodemon": "^1.18.4"
   }
 }
