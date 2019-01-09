@@ -34,7 +34,7 @@ let getPodioItem = module.exports.getPodioItem = (name) => {
 }
 
 module.exports.getPodioItemsByFilter = (filters) => {
-	console.log(filters);
+
 	return new Promise((resolve, reject) => {
 		const filter = {
 			"sort_by": 'title',
@@ -48,7 +48,6 @@ module.exports.getPodioItemsByFilter = (filters) => {
 		let getItems = (items) => {
 			return podio.request('POST', `/item/app/${process.env.appID}/filter/`, filter)
       	.then((res) => {
-					console.log(res.items.length);
 					items = [...items, ...res.items];
 					if(res.items.length == filter.limit) {
 						filter.offset += filter.limit;
@@ -57,36 +56,46 @@ module.exports.getPodioItemsByFilter = (filters) => {
 						return items;
 					}
 			}).catch((err) => {
+				console.log(err);
 				reject(err);
 			});
 		}
 
 		getItems([]).then((items) => {
 			let filter_item = helper.filterItems(filters, items);
-			console.log(filter_item.length);
 			resolve(helper.listItems(filter_item));
 		});
 	});
 }
 
 let getPodioItems = module.exports.getPodioItems = (query = 'name', limit = 50, search_fields = 'title', counts = true, highlights = false, offset = 0, ref_type = 'item') => {
-	return podio.request('GET', `/search/app/${process.env.appID}/v2/?query=${query}&limit=${limit}&search_fields=${search_fields}&counts=${counts}&highlights=${highlights}&offset=${offset}&ref_type=${ref_type}`);
+	return podio.request('GET', `/search/app/${process.env.appID}/v2/`, {
+		'query': query,
+		'limit': limit,
+		'search_fields': search_fields,
+		'counts': counts,
+		'highlights': highlights,
+		'offset': offset,
+		'ref_type': ref_type
+	});
 }
+
 let getPodioItemValues = module.exports.getPodioItemValues = (itemId) => {
 	return podio.request('GET', `/item/${itemId}/value/v2/`);
 }
 
 module.exports.getItemsList = (name) => {
-	console.log(`getting items ${name}`);
-	let getPodioItems = (query = 'name', limit = 50, search_fields = 'title', counts = true, highlights = false, offset = 0, ref_type = 'item') => {
-		console.log(`running /search/app/${process.env.appID}/v2/?query=${query}&limit=${limit}&search_fields=${search_fields}&counts=${counts}&highlights=${highlights}&offset=${offset}&ref_type=${ref_type}`);
-		return podio.request('GET', `/search/app/${process.env.appID}/v2/?query=${query}&limit=${limit}&search_fields=${search_fields}&counts=${counts}&highlights=${highlights}&offset=${offset}&ref_type=${ref_type}`);
-	};
 	return new Promise((resolve, reject) => {
 		getPodioItems(name, 50, 'title', true, true, 0, 'item')
 		.then((res) => {
-			console.log("listing items");
-			resolve(helper.listItems(res.results, false));
+			let items = res.results
+				.filter(item => item.title.includes(name))
+				.reverse()
+			if(Object.keys(items).length == 1) {
+				resolve(showAllFields(name));
+			} else {
+				resolve(helper.listItems(items, false));
+			}
 		});
 	})
 }
@@ -121,15 +130,22 @@ module.exports.setValue = (item, name, value) => {
 	});
 }
 
-module.exports.showAllFields = (query) => {
+let showAllFields = module.exports.showAllFields = (query) => {
 	return new Promise((resolve, reject) => {
 		getPodioItems(query, 50, 'title', true, true, 0, 'item')
 		.then((t_res) =>  {
-			let itemsCount = Object.keys(t_res.results).length;
+			console.log(t_res.results[0]);
+			let items = t_res.results
+				.map(item => {
+					return item;
+				})
+				.filter(item => item.title.includes(query))
+				.reverse()
+			let itemsCount = Object.keys(items).length;
 			if(itemsCount>1) {
 			resolve(`Multiple items match this keyword, please refine search to be more unique.`);
 			} else {
-			getPodioItem(t_res.results[0].title)
+			getPodioItem(items[0].title)
 				.then((res) => {
 					let output = `*Item:* ${res.title}\n*Link:* ${res.link}\n\n`;
 					getPodioItemValues(res.item_id).then((res) => {
