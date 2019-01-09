@@ -37,7 +37,9 @@ exports.filterItems = (filters, items) => {
     let processedItems = [];
     let filtersObject = getFiltersObject(filters);
     console.log(filtersObject);
-    processedItems = items.filter((item) => {
+    processedItems = items
+    .reverse()
+    .filter((item) => {
         let valuesMatchesCount = 0;
         item.fields.forEach((field) => {
             //check if the current property is one of the specified ones in the filters list

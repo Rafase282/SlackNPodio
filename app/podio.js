@@ -88,9 +88,11 @@ module.exports.getItemsList = (name) => {
 	return new Promise((resolve, reject) => {
 		getPodioItems(name, 50, 'title', true, true, 0, 'item')
 		.then((res) => {
+			console.log(res.results);
 			let items = res.results
-				.filter(item => item.title.includes(name))
-				.reverse()
+				.filter(item => item.title.toLowerCase().includes(name.toLowerCase()))
+				.reverse();
+			console.log(items);
 			if(Object.keys(items).length == 1) {
 				resolve(showAllFields(name));
 			} else {
@@ -139,7 +141,7 @@ let showAllFields = module.exports.showAllFields = (query) => {
 				.map(item => {
 					return item;
 				})
-				.filter(item => item.title.includes(query))
+				.filter(item => item.title.toLowerCase().includes(query.toLowerCase()))
 				.reverse()
 			let itemsCount = Object.keys(items).length;
 			if(itemsCount>1) {
