@@ -33,10 +33,8 @@ const getFiltersObject = exports.getFiltersObject = (fields) => {
  * @return {Array}
  **/
 exports.filterItems = (filters, items) => {
-    console.log("filter items", items.length);
     let processedItems = [];
     let filtersObject = getFiltersObject(filters);
-    console.log(filtersObject);
     processedItems = items
     .reverse()
     .filter((item) => {
@@ -286,7 +284,6 @@ exports.listItems = (input, showVert = true) => {
     let output = '';
     let itemsObject = input;
     let itemsCount = Object.keys(itemsObject).length;
-    console.log("listing items");
     if (itemsCount > 0) {
         output += `I've found ${itemsCount} items matching your query\n\n`;
         

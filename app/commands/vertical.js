@@ -1,5 +1,5 @@
 module.exports = (podio, args) => {
-	let vertical = '';
+	let vertical = args[0];
 	switch(args[0]) {
 		case 'Brett':
 		case 'brett':
@@ -33,5 +33,4 @@ module.exports = (podio, args) => {
 		return;
 	}
 	
-	//return podio.permissionCheck(podio.READ, podio.getPodioItemsByFilters, [`vertical-2=${vertical}`]);
 }

@@ -10,8 +10,6 @@ const podio = new Podio({
 	clientSecret: process.env.clientSecret
 });
 
-console.log(process.env.clientSecret);
-
 module.exports = {
 	podioAuthenticated: false,
 	WRITE: process.env.WRITE == 'TRUE',
@@ -88,11 +86,9 @@ module.exports.getItemsList = (name) => {
 	return new Promise((resolve, reject) => {
 		getPodioItems(name, 50, 'title', true, true, 0, 'item')
 		.then((res) => {
-			console.log(res.results);
 			let items = res.results
 				.filter(item => item.title.toLowerCase().includes(name.toLowerCase()))
 				.reverse();
-			console.log(items);
 			if(Object.keys(items).length == 1) {
 				resolve(showAllFields(name));
 			} else {
@@ -136,7 +132,6 @@ let showAllFields = module.exports.showAllFields = (query) => {
 	return new Promise((resolve, reject) => {
 		getPodioItems(query, 50, 'title', true, true, 0, 'item')
 		.then((t_res) =>  {
-			console.log(t_res.results[0]);
 			let items = t_res.results
 				.map(item => {
 					return item;
